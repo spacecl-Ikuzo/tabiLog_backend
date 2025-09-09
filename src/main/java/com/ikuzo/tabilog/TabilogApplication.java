@@ -8,6 +8,7 @@ public class TabilogApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TabilogApplication.class, args);
+        System.out.println("xxx123");
     }
 
 }

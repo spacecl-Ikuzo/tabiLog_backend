@@ -116,7 +116,7 @@ public class SpotController {
         return ResponseEntity.ok(ApiResponse.success("관광지 순서가 재정렬되었습니다.", null));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/places-search")
     public ResponseEntity<ApiResponse<List<GooglePlaceResponse>>> searchPlaces(
             @RequestParam String query,
             @RequestParam(required = false) String location) {

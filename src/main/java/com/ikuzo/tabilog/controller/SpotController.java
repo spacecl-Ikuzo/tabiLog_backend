@@ -60,16 +60,6 @@ public class SpotController {
         return ResponseEntity.ok(ApiResponse.success(responses));
     }
 
-    @GetMapping("/google-search")
-    public ResponseEntity<ApiResponse<List<GooglePlaceResponse>>> searchPlacesWithGoogle(
-            @RequestParam String query,
-            @RequestParam(required = false) String location) {
-        
-        List<GooglePlaceResponse> places = googleMapsService.searchPlaces(query, location);
-        
-        return ResponseEntity.ok(ApiResponse.success(places));
-    }
-
     @GetMapping("/travel-time")
     public ResponseEntity<ApiResponse<String>> getTravelTime(
             @RequestParam double lat1,
@@ -116,12 +106,14 @@ public class SpotController {
         return ResponseEntity.ok(ApiResponse.success("관광지 순서가 재정렬되었습니다.", null));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/google-search")
     public ResponseEntity<ApiResponse<List<GooglePlaceResponse>>> searchPlaces(
             @RequestParam String query,
-            @RequestParam(required = false) String location) {
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false, defaultValue = "ja") String language,
+            @RequestParam(required = false, defaultValue = "JP") String region) {
         
-        List<GooglePlaceResponse> places = googleMapsService.searchPlaces(query, location);
+        List<GooglePlaceResponse> places = googleMapsService.searchPlaces(query, location, language, region);
         
         return ResponseEntity.ok(ApiResponse.success(places));
     }

@@ -5,8 +5,6 @@ import com.google.maps.PlacesApi;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.*;
-import com.ikuzo.tabilog.domain.spot.Spot;
-import com.ikuzo.tabilog.domain.spot.SpotCategory;
 import com.ikuzo.tabilog.dto.response.GoogleDirectionsResponse;
 import com.ikuzo.tabilog.dto.response.GooglePlaceResponse;
 import lombok.RequiredArgsConstructor;
@@ -69,9 +67,11 @@ public class GoogleMapsService {
         return 13; // 기본값
     }
 
-    public List<GooglePlaceResponse> searchPlaces(String query, String location) {
+    public List<GooglePlaceResponse> searchPlaces(String query, String location, String language, String region) {
         try {
             PlacesSearchResponse response = PlacesApi.textSearchQuery(geoApiContext, query)
+                    .language(language)
+                    .region(region)
                     .await();
             
             return Arrays.stream(response.results)
@@ -107,20 +107,49 @@ public class GoogleMapsService {
             LatLng origin = new LatLng(lat1, lng1);
             LatLng destination = new LatLng(lat2, lng2);
             
+            log.info("경로 조회 요청 - 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", lat1, lng1, lat2, lng2, travelMode);
+            
             DirectionsResult result = DirectionsApi.newRequest(geoApiContext)
                     .origin(origin)
                     .destination(destination)
                     .mode(com.google.maps.model.TravelMode.valueOf(travelMode.toUpperCase()))
                     .await();
             
+            if (result.routes == null || result.routes.length == 0) {
+                log.warn("경로를 찾을 수 없습니다. 출발지: ({}, {}), 도착지: ({}, {})", lat1, lng1, lat2, lng2);
+                return GoogleDirectionsResponse.builder()
+                        .status("ZERO_RESULTS")
+                        .errorMessage("경로를 찾을 수 없습니다.")
+                        .build();
+            }
+            
             return convertToDirectionsResponse(result);
                     
-        } catch (Exception e) {
-            log.error("경로 조회 실패: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 이동수단: {}. 지원되는 이동수단: WALKING, DRIVING, BICYCLING, TRANSIT", travelMode);
             return GoogleDirectionsResponse.builder()
-                    .status("ERROR")
-                    .errorMessage(e.getMessage())
+                    .status("INVALID_REQUEST")
+                    .errorMessage("지원되지 않는 이동수단입니다: " + travelMode)
                     .build();
+        } catch (com.google.maps.errors.ZeroResultsException e) {
+            log.warn("경로를 찾을 수 없습니다. 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", 
+                     lat1, lng1, lat2, lng2, travelMode);
+            return GoogleDirectionsResponse.builder()
+                    .status("ZERO_RESULTS")
+                    .errorMessage("해당 경로를 찾을 수 없습니다. 다른 이동수단을 시도해보세요.")
+                    .build();
+        } catch (com.google.maps.errors.ApiException e) {
+            log.error("Google Maps API 오류: {} - {}", e.getClass().getSimpleName(), e.getMessage());
+            return GoogleDirectionsResponse.builder()
+                    .status("API_ERROR")
+                    .errorMessage("Google Maps API 오류: " + e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            log.error("경로 조회 실패 - 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}, 오류: {}", 
+                     lat1, lng1, lat2, lng2, travelMode, e.getClass().getSimpleName(), e);
+            
+            // Mock 데이터를 반환하여 기본적인 경로 정보 제공
+            return getMockDirections(lat1, lng1, lat2, lng2, travelMode);
         }
     }
 
@@ -256,5 +285,55 @@ public class GoogleMapsService {
                 .build());
         
         return mockResults;
+    }
+
+    private GoogleDirectionsResponse getMockDirections(double lat1, double lng1, double lat2, double lng2, String travelMode) {
+        log.info("Mock 경로 데이터를 반환합니다. 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", lat1, lng1, lat2, lng2, travelMode);
+        
+        // 거리 계산 (간단한 유클리드 거리)
+        double distance = Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lng2 - lng1, 2)) * 111000; // 대략적인 미터 변환
+        int durationMinutes = (int) (distance / 1000 * 15); // 대략적인 시간 계산 (km당 15분)
+        
+        List<GoogleDirectionsResponse.Step> steps = new ArrayList<>();
+        steps.add(GoogleDirectionsResponse.Step.builder()
+                .distance(GoogleDirectionsResponse.Distance.builder()
+                        .text(String.format("%.1f km", distance / 1000))
+                        .value((long) distance)
+                        .build())
+                .duration(GoogleDirectionsResponse.Duration.builder()
+                        .text(String.format("%d분", durationMinutes))
+                        .value((long) (durationMinutes * 60))
+                        .build())
+                .htmlInstructions("출발지에서 도착지로 이동")
+                .travelMode(travelMode.toUpperCase())
+                .build());
+        
+        List<GoogleDirectionsResponse.Leg> legs = new ArrayList<>();
+        legs.add(GoogleDirectionsResponse.Leg.builder()
+                .distance(GoogleDirectionsResponse.Distance.builder()
+                        .text(String.format("%.1f km", distance / 1000))
+                        .value((long) distance)
+                        .build())
+                .duration(GoogleDirectionsResponse.Duration.builder()
+                        .text(String.format("%d분", durationMinutes))
+                        .value((long) (durationMinutes * 60))
+                        .build())
+                .startAddress("출발지")
+                .endAddress("도착지")
+                .steps(steps)
+                .build());
+        
+        List<GoogleDirectionsResponse.Route> routes = new ArrayList<>();
+        routes.add(GoogleDirectionsResponse.Route.builder()
+                .summary("Mock 경로")
+                .legs(legs)
+                .overviewPolyline("mock_polyline")
+                .build());
+        
+        return GoogleDirectionsResponse.builder()
+                .status("OK")
+                .routes(routes)
+                .errorMessage("Google Maps API를 사용할 수 없어 Mock 데이터를 제공합니다.")
+                .build();
     }
 }

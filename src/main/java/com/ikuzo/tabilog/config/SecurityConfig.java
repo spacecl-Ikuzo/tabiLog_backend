@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/spots/address").permitAll() // 주소 변환 API 허용
                         .requestMatchers("/api/test/**").permitAll() // 테스트 API 허용 (개발용)
                         .requestMatchers("/api/plans/**").permitAll() // 플랜 API 허용 (개발용 - JWT 토큰 없이 테스트)
-                        .requestMatchers("/api/regions/**").permitAll() // 지역 API 허용
+                        .requestMatchers("/api/categories/regions/**").permitAll() // 지역 API 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 );
 

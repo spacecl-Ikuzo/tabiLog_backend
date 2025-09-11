@@ -6,9 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/regions")
+@RequestMapping("api/categories/regions")
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:5173", "http://localhost:8082", "http://127.0.0.1:3000", "http://127.0.0.1:5173"}, 
              allowCredentials = "true",
@@ -16,25 +17,36 @@ import java.util.*;
              methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class RegionController {
 
+
     @GetMapping
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllRegions() {
-        Map<String, Object> regionData = new HashMap<>();
+    public ResponseEntity<ApiResponse<List<String>>> getPrefecturesByRegion(
+            @RequestParam(required = false, defaultValue = "") String region) {
         
         Map<String, List<String>> regions = getRegionMappings();
         
-        regionData.put("regions", regions);
-        regionData.put("allRegions", Arrays.asList("전체", "東日本", "西日本", "北日本", "南日本"));
+        // 빈값 또는 "전체"인 경우 모든 지역의 도시 반환
+        if (region == null || region.trim().isEmpty() || region.equals("전체")) {
+            List<String> allPrefectures = regions.values().stream()
+                    .flatMap(List::stream)
+                    .distinct()
+                    .sorted()
+                    .collect(Collectors.toList());
+            
+            return ResponseEntity.ok(ApiResponse.success("전체 지역의 현(prefecture) 정보를 조회했습니다.", allPrefectures));
+        }
         
-        return ResponseEntity.ok(ApiResponse.success("지역별 관광지 정보를 조회했습니다.", regionData));
-    }
-
-    @GetMapping("/{region}/prefectures")
-    public ResponseEntity<ApiResponse<List<String>>> getPrefecturesByRegion(@PathVariable String region) {
-        return getRegionPrefectures(region);
+        // 특정 지역의 도시 반환
+        List<String> prefectures = regions.get(region);
+        if (prefectures == null) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("존재하지 않는 지역입니다: " + region));
+        }
+        
+        return ResponseEntity.ok(ApiResponse.success(region + " 지역의 현(prefecture) 정보를 조회했습니다.", prefectures));
     }
 
     @GetMapping("/{region}")
-    public ResponseEntity<ApiResponse<List<String>>> getRegionPrefectures(@PathVariable String region) {
+    public ResponseEntity<ApiResponse<List<String>>> getRegionPrefecturesByPath(@PathVariable String region) {
         Map<String, List<String>> regions = getRegionMappings();
         
         List<String> prefectures = regions.get(region);

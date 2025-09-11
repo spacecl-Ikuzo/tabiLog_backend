@@ -95,6 +95,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        // 상세한 오류 로깅
+        System.err.println("=== 예외 발생 ===");
+        System.err.println("예외 타입: " + ex.getClass().getName());
+        System.err.println("예외 메시지: " + ex.getMessage());
+        ex.printStackTrace();
+        
         ErrorResponse error = new ErrorResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             "INTERNAL_SERVER_ERROR",

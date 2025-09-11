@@ -109,16 +109,27 @@ public class PlanController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<PlanResponse>>> searchUserPlans(
             @RequestParam(required = false) String prefecture,
+            @RequestParam(required = false) String prefectures,
             @RequestParam(required = false) String status,
             Authentication authentication) {
         
         Long userId = getUserIdFromAuthentication(authentication);
-        // 사용자의 여행 계획을 prefecture와 status로 필터링
-        List<PlanResponse> responses = planService.getUserPlansWithFilters(userId, prefecture, status);
+        
+        // prefectures 파라미터 처리 (comma-separated)
+        List<String> prefectureList = null;
+        if (prefectures != null && !prefectures.trim().isEmpty() && !prefectures.equals("전체")) {
+            prefectureList = List.of(prefectures.split(","));
+        }
+        
+        // 사용자의 여행 계획을 prefecture(s)와 status로 필터링
+        List<PlanResponse> responses = planService.getUserPlansWithFilters(userId, prefecture, prefectureList, status);
         
         String message = "내 여행 계획을 조회했습니다.";
         if (prefecture != null && !prefecture.trim().isEmpty() && !prefecture.equals("전체")) {
             message += " (현: " + prefecture + ")";
+        }
+        if (prefectureList != null && !prefectureList.isEmpty()) {
+            message += " (지역: " + String.join(", ", prefectureList) + ")";
         }
         if (status != null && !status.trim().isEmpty() && !status.equals("전체")) {
             message += " (상태: " + status + ")";

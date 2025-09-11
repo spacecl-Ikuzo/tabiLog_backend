@@ -115,15 +115,27 @@ public class PlanService {
 
     // 사용자의 여행 계획을 prefecture와 status로 필터링하여 조회
     public List<PlanResponse> getUserPlansWithFilters(Long userId, String prefecture, String status) {
+        return getUserPlansWithFilters(userId, prefecture, null, status);
+    }
+    
+    // 사용자의 여행 계획을 prefecture(단일 또는 복수)와 status로 필터링하여 조회
+    public List<PlanResponse> getUserPlansWithFilters(Long userId, String prefecture, List<String> prefectures, String status) {
         List<Plan> plans = planRepository.findAllByMemberUserIdOrderByStartDateDesc(userId);
         
-        // 필터링 적용 (빈 문자열, null, "전체"는 필터링하지 않음)
+        // prefecture 필터링 (단일 prefecture 또는 복수 prefectures 중 하나만 적용)
         if (!isEmptyOrNull(prefecture)) {
+            // 단일 prefecture 필터링
             plans = plans.stream()
                     .filter(plan -> plan.getPrefecture().equals(prefecture))
                     .collect(Collectors.toList());
+        } else if (prefectures != null && !prefectures.isEmpty()) {
+            // 복수 prefectures 필터링 (IN 조건)
+            plans = plans.stream()
+                    .filter(plan -> prefectures.contains(plan.getPrefecture()))
+                    .collect(Collectors.toList());
         }
         
+        // status 필터링
         if (!isEmptyOrNull(status)) {
             plans = plans.stream()
                     .filter(plan -> plan.getStatus().equals(status))

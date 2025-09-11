@@ -21,6 +21,7 @@ public class PlanResponse {
     private LocalDate endDate;
     private String region;
     private String prefecture;
+    private String prefectureImageUrl;
     private Long participant_count;
     private Long totalBudget;
     private String status;

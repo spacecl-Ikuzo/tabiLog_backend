@@ -39,6 +39,9 @@ public class Plan {
     @Column(nullable = false)
     private String prefecture; //도
 
+    @Column
+    private String prefectureImageUrl; //현별 배경 이미지 URL
+
     @Column(nullable = false)
     private Long participant_count; //인원수
 
@@ -69,12 +72,13 @@ public class Plan {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Plan(String title, LocalDate startDate, LocalDate endDate, Long totalBudget, User user, String region, String status, String prefecture, Long participant_count, boolean isPublic) {
+    public Plan(String title, LocalDate startDate, LocalDate endDate, Long totalBudget, User user, String region, String status, String prefecture, String prefectureImageUrl, Long participant_count, boolean isPublic) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.region = region;
         this.prefecture = prefecture;
+        this.prefectureImageUrl = prefectureImageUrl;
         this.participant_count = participant_count;
         this.totalBudget = totalBudget;
         this.status = status;

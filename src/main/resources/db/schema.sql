@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS plan (
     end_date DATE NOT NULL,
     region_enum ENUM('東日本', '西日本', '南日本', '北日本') NOT NULL,
     prefecture VARCHAR(100) NOT NULL,
+    prefecture_image_url VARCHAR(500),
     participant_count BIGINT NOT NULL,
     total_budget BIGINT NOT NULL,
     status ENUM('PLANNING', 'COMPLETED') NOT NULL,

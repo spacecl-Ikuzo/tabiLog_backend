@@ -27,13 +27,13 @@ public class PlanMember {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PlanMemberRole role = PlanMemberRole.MEMBER; // 기본값: MEMBER
+    private PlanMemberRole role = PlanMemberRole.VIEWER; // 기본값: VIEWER
 
     @Builder
     public PlanMember(Plan plan, User user, PlanMemberRole role) {
         this.plan = plan;
         this.user = user;
-        this.role = role != null ? role : PlanMemberRole.MEMBER;
+        this.role = role != null ? role : PlanMemberRole.VIEWER;
     }
 
     // 역할 변경 메서드

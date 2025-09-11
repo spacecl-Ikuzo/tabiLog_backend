@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -52,6 +54,10 @@ public class User {
     @UpdateTimestamp // 엔티티가 수정될 때 자동으로 시간이 기록됩니다.
     private LocalDateTime updatedAt;
 
+    // PlanMember 관계 (User가 참여하는 Plan들)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<com.ikuzo.tabilog.domain.plan.PlanMember> planMembers = new ArrayList<>();
+
     @Builder
     public User(String email, String password, String firstName, String lastName, String gender, String phoneNumber, String nickname, Boolean privacyAgreement, Boolean publicAgreement) {
         this.email = email;
@@ -77,5 +83,19 @@ public class User {
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    //== PlanMember 관련 편의 메서드 ==//
+    public List<com.ikuzo.tabilog.domain.plan.Plan> getParticipatingPlans() {
+        return this.planMembers.stream()
+                .map(com.ikuzo.tabilog.domain.plan.PlanMember::getPlan)
+                .toList();
+    }
+
+    public List<com.ikuzo.tabilog.domain.plan.Plan> getOwnedPlans() {
+        return this.planMembers.stream()
+                .filter(member -> member.getRole() == com.ikuzo.tabilog.domain.plan.PlanMemberRole.OWNER)
+                .map(com.ikuzo.tabilog.domain.plan.PlanMember::getPlan)
+                .toList();
     }
 }

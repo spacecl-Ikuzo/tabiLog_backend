@@ -32,11 +32,27 @@ CREATE TABLE IF NOT EXISTS plan (
     title VARCHAR(255) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
+    region_enum ENUM('東日本', '西日本', '南日本', '北日本') NOT NULL,
+    prefecture VARCHAR(100) NOT NULL,
+    participant_count BIGINT NOT NULL,
     total_budget BIGINT NOT NULL,
+    status ENUM('PLANNING', 'COMPLETED') NOT NULL,
+    is_public BOOLEAN NOT NULL DEFAULT FALSE,
     user_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+-- 계획 멤버 테이블 (계획 참여자)
+CREATE TABLE IF NOT EXISTS plan_member (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    plan_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    role ENUM('OWNER', 'EDITOR', 'VIEWER') NOT NULL DEFAULT 'VIEWER',
+    FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_plan_user (plan_id, user_id)
 );
 
 -- 일별 계획 테이블
@@ -89,6 +105,12 @@ CREATE INDEX IF NOT EXISTS idx_user_email ON user(email);
 CREATE INDEX IF NOT EXISTS idx_user_nickname ON user(nickname);
 CREATE INDEX IF NOT EXISTS idx_plan_user_id ON plan(user_id);
 CREATE INDEX IF NOT EXISTS idx_plan_dates ON plan(start_date, end_date);
+CREATE INDEX IF NOT EXISTS idx_plan_region_enum ON plan(region_enum);
+CREATE INDEX IF NOT EXISTS idx_plan_status ON plan(status);
+CREATE INDEX IF NOT EXISTS idx_plan_is_public ON plan(is_public);
+CREATE INDEX IF NOT EXISTS idx_plan_member_plan_id ON plan_member(plan_id);
+CREATE INDEX IF NOT EXISTS idx_plan_member_user_id ON plan_member(user_id);
+CREATE INDEX IF NOT EXISTS idx_plan_member_role ON plan_member(role);
 CREATE INDEX IF NOT EXISTS idx_daily_plan_plan_id ON daily_plan(plan_id);
 CREATE INDEX IF NOT EXISTS idx_daily_plan_visit_date ON daily_plan(visit_date);
 CREATE INDEX IF NOT EXISTS idx_spot_daily_plan_id ON spot(daily_plan_id);

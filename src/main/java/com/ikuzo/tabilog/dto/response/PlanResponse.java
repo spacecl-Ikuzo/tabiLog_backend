@@ -19,9 +19,15 @@ public class PlanResponse {
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String region;
+    private String prefecture;
+    private Long participant_count;
     private Long totalBudget;
+    private String status;
     private Long userId;
     private List<DailyPlanResponse> dailyPlans;
+    private List<PlanMemberResponse> members;
+    private boolean isPublic;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

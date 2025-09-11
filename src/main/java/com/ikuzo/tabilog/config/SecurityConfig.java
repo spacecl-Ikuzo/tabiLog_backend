@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/health").permitAll() // 루트 경로와 헬스 체크 허용
                         .requestMatchers("/favicon.ico").permitAll() // 파비콘 허용
                         .requestMatchers("/static/**").permitAll() // 정적 리소스 허용
+                        .requestMatchers("/images/**").permitAll() // 이미지 리소스 허용
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용 (개발용)
                         .requestMatchers("/api/spots/google-search").permitAll() // Google Maps 검색 API는 인증 없이 허용
                         .requestMatchers("/api/spots/nearby").permitAll() // Google Maps 주변 검색 API는 인증 없이 허용

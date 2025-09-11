@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,16 +43,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // CORS 설정을 먼저 적용 (중요: 다른 설정보다 우선)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 // CSRF 보호 비활성화 (JWT는 세션을 사용하지 않으므로)
                 .csrf(csrf -> csrf.disable())
-                // CORS 설정 추가
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 // 인증 실패 시 처리할 핸들러 등록
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 // 세션 관리 정책을 STATELESS로 설정 (JWT 사용)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // API 경로별 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 모든 OPTIONS 요청 허용 (CORS preflight)
                         .requestMatchers("/api/auth/**").permitAll() // '/api/auth/'로 시작하는 모든 경로는 인증 없이 허용
                         .requestMatchers("/", "/health").permitAll() // 루트 경로와 헬스 체크 허용
                         .requestMatchers("/favicon.ico").permitAll() // 파비콘 허용
@@ -63,6 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/spots/travel-time").permitAll() // 이동 시간 API 허용
                         .requestMatchers("/api/spots/address").permitAll() // 주소 변환 API 허용
                         .requestMatchers("/api/test/**").permitAll() // 테스트 API 허용 (개발용)
+                        .requestMatchers("/api/plans/**").permitAll() // 플랜 API 허용 (개발용 - JWT 토큰 없이 테스트)
+                        .requestMatchers("/api/regions/**").permitAll() // 지역 API 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 );
 

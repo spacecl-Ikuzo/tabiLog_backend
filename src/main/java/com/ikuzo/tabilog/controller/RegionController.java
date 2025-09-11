@@ -52,6 +52,11 @@ public class RegionController {
 
     @GetMapping("/{region}/prefectures")
     public ResponseEntity<ApiResponse<List<String>>> getPrefecturesByRegion(@PathVariable String region) {
+        return getRegionPrefectures(region);
+    }
+
+    @GetMapping("/{region}")
+    public ResponseEntity<ApiResponse<List<String>>> getRegionPrefectures(@PathVariable String region) {
         Map<String, List<String>> regions = new HashMap<>();
         
         regions.put("東日本", Arrays.asList(
@@ -81,6 +86,6 @@ public class RegionController {
                     .body(ApiResponse.error("존재하지 않는 지역입니다: " + region));
         }
         
-        return ResponseEntity.ok(ApiResponse.success(region + " 지역의 관광지 정보를 조회했습니다.", prefectures));
+        return ResponseEntity.ok(ApiResponse.success(region + " 지역의 현(prefecture) 정보를 조회했습니다.", prefectures));
     }
 }

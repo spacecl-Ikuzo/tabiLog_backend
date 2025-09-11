@@ -106,6 +106,27 @@ public class PlanController {
         return ResponseEntity.ok(ApiResponse.success("여행 계획이 삭제되었습니다.", null));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<PlanResponse>>> searchUserPlans(
+            @RequestParam(required = false) String prefecture,
+            @RequestParam(required = false) String status,
+            Authentication authentication) {
+        
+        Long userId = getUserIdFromAuthentication(authentication);
+        // 사용자의 여행 계획을 prefecture와 status로 필터링
+        List<PlanResponse> responses = planService.getUserPlansWithFilters(userId, prefecture, status);
+        
+        String message = "내 여행 계획을 조회했습니다.";
+        if (prefecture != null && !prefecture.trim().isEmpty() && !prefecture.equals("전체")) {
+            message += " (현: " + prefecture + ")";
+        }
+        if (status != null && !status.trim().isEmpty() && !status.equals("전체")) {
+            message += " (상태: " + status + ")";
+        }
+        
+        return ResponseEntity.ok(ApiResponse.success(message, responses));
+    }
+
     private Long getUserIdFromAuthentication(Authentication authentication) {
         // TODO: 실제 인증 정보에서 사용자 ID 추출
         return 1L; // 임시 값

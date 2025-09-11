@@ -111,6 +111,29 @@ public class PlanService {
         planRepository.delete(plan);
     }
 
+    // 사용자의 여행 계획을 prefecture와 status로 필터링하여 조회
+    public List<PlanResponse> getUserPlansWithFilters(Long userId, String prefecture, String status) {
+        List<Plan> plans = planRepository.findAllByUserIdOrderByStartDateDesc(userId);
+        
+        // 필터링 적용 (빈 문자열, null, "전체"는 필터링하지 않음)
+        if (!isEmptyOrNull(prefecture)) {
+            plans = plans.stream()
+                    .filter(plan -> plan.getPrefecture().equals(prefecture))
+                    .collect(Collectors.toList());
+        }
+        
+        if (!isEmptyOrNull(status)) {
+            plans = plans.stream()
+                    .filter(plan -> plan.getStatus().equals(status))
+                    .collect(Collectors.toList());
+        }
+        
+        return plans.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+   
     // 공개된 여행 계획 조회 (필터링 지원)
     public List<PlanResponse> getPublicPlans(String region, String prefecture, String status) {
         List<Plan> plans;

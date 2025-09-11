@@ -3,19 +3,20 @@ package com.ikuzo.tabilog.service;
 import com.ikuzo.tabilog.domain.plan.DailyPlan;
 import com.ikuzo.tabilog.domain.plan.DailyPlanRepository;
 import com.ikuzo.tabilog.domain.plan.Plan;
+import com.ikuzo.tabilog.domain.plan.PlanMember;
 import com.ikuzo.tabilog.domain.plan.PlanRepository;
 import com.ikuzo.tabilog.domain.user.User;
 import com.ikuzo.tabilog.domain.user.UserRepository;
 import com.ikuzo.tabilog.dto.request.DailyPlanRequest;
 import com.ikuzo.tabilog.dto.request.PlanRequest;
 import com.ikuzo.tabilog.dto.response.DailyPlanResponse;
+import com.ikuzo.tabilog.dto.response.PlanMemberResponse;
 import com.ikuzo.tabilog.dto.response.PlanResponse;
 import com.ikuzo.tabilog.exception.PlanNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,9 +111,38 @@ public class PlanService {
         planRepository.delete(plan);
     }
 
+    // 공개된 여행 계획 조회 (필터링 지원)
+    public List<PlanResponse> getPublicPlans(String region, String prefecture, String status) {
+        List<Plan> plans;
+        
+        // 모든 필터가 null이거나 빈 문자열인 경우 전체 조회
+        if (isEmptyOrNull(region) && isEmptyOrNull(prefecture) && isEmptyOrNull(status)) {
+            plans = planRepository.findAllPublicPlans();
+        } else {
+            // null이나 빈 문자열을 null로 변환
+            String regionFilter = isEmptyOrNull(region) ? null : region;
+            String prefectureFilter = isEmptyOrNull(prefecture) ? null : prefecture;
+            String statusFilter = isEmptyOrNull(status) ? null : status;
+            
+            plans = planRepository.findPublicPlansWithFilters(regionFilter, prefectureFilter, statusFilter);
+        }
+        
+        return plans.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    private boolean isEmptyOrNull(String value) {
+        return value == null || value.trim().isEmpty() || value.equals("전체");
+    }
+
     private PlanResponse convertToResponse(Plan plan) {
         List<DailyPlanResponse> dailyPlanResponses = plan.getDailyPlans().stream()
                 .map(this::convertToResponse)
+                .collect(Collectors.toList());
+
+        List<PlanMemberResponse> memberResponses = plan.getPlanMembers().stream()
+                .map(this::convertToMemberResponse)
                 .collect(Collectors.toList());
 
         return PlanResponse.builder()
@@ -120,9 +150,15 @@ public class PlanService {
                 .title(plan.getTitle())
                 .startDate(plan.getStartDate())
                 .endDate(plan.getEndDate())
+                .region(plan.getRegion())
+                .prefecture(plan.getPrefecture())
+                .participant_count(plan.getParticipant_count())
                 .totalBudget(plan.getTotalBudget())
+                .status(plan.getStatus())
                 .userId(plan.getUser().getId())
                 .dailyPlans(dailyPlanResponses)
+                .members(memberResponses)
+                .isPublic(plan.isPublic())
                 .createdAt(plan.getCreatedAt())
                 .updatedAt(plan.getUpdatedAt())
                 .build();
@@ -137,6 +173,16 @@ public class PlanService {
                 .travelSegments(null) // TravelSegmentService에서 처리
                 .createdAt(dailyPlan.getCreatedAt())
                 .updatedAt(dailyPlan.getUpdatedAt())
+                .build();
+    }
+
+    private PlanMemberResponse convertToMemberResponse(PlanMember planMember) {
+        return PlanMemberResponse.builder()
+                .id(planMember.getId())
+                .userId(planMember.getUser().getId())
+                .userNickname(planMember.getUser().getNickname())
+                .userEmail(planMember.getUser().getEmail())
+                .role(planMember.getRole())
                 .build();
     }
 }

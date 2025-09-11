@@ -53,9 +53,16 @@ public class SecurityConfig {
                 // API 경로별 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // '/api/auth/'로 시작하는 모든 경로는 인증 없이 허용
+                        .requestMatchers("/", "/health").permitAll() // 루트 경로와 헬스 체크 허용
+                        .requestMatchers("/favicon.ico").permitAll() // 파비콘 허용
+                        .requestMatchers("/static/**").permitAll() // 정적 리소스 허용
+                        .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용 (개발용)
                         .requestMatchers("/api/spots/google-search").permitAll() // Google Maps 검색 API는 인증 없이 허용
                         .requestMatchers("/api/spots/nearby").permitAll() // Google Maps 주변 검색 API는 인증 없이 허용
                         .requestMatchers("/api/spots/directions").permitAll() // Google Maps 경로 API는 인증 없이 허용
+                        .requestMatchers("/api/spots/travel-time").permitAll() // 이동 시간 API 허용
+                        .requestMatchers("/api/spots/address").permitAll() // 주소 변환 API 허용
+                        .requestMatchers("/api/test/**").permitAll() // 테스트 API 허용 (개발용)
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 );
 

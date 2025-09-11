@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -91,6 +92,22 @@ public class GlobalExceptionHandler {
             errors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
+        // favicon.ico 같은 정적 리소스 요청에 대해서는 로그를 남기지 않고 조용히 처리
+        if (ex.getResourcePath() != null && ex.getResourcePath().contains("favicon.ico")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            "RESOURCE_NOT_FOUND",
+            "요청한 리소스를 찾을 수 없습니다: " + ex.getResourcePath(),
+            LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     @ExceptionHandler(Exception.class)

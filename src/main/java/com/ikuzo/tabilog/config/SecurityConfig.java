@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -58,6 +57,8 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // H2 콘솔 허용
                         .requestMatchers("/").permitAll() // 루트 경로 허용
                         .requestMatchers("/favicon.ico").permitAll() // 파비콘 허용
+                        .requestMatchers("/static/**").permitAll() // 정적 리소스 허용
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // 추가 정적 리소스 허용
                         .requestMatchers("/api/spots/search/**").permitAll() // 관광지 검색 허용
                         .requestMatchers("/api/spots/google-search/**").permitAll() // Google Places 검색 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요

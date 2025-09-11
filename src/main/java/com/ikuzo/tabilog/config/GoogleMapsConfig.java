@@ -15,15 +15,12 @@ public class GoogleMapsConfig {
 
     @Bean
     public GeoApiContext geoApiContext() {
-        if (apiKey == null || apiKey.trim().isEmpty() || "YOUR_GOOGLE_MAPS_API_KEY_HERE".equals(apiKey)) {
-            log.warn("Google Maps API Key가 설정되지 않았습니다. Mock 데이터가 사용됩니다.");
-            // API 키가 없어도 Context는 생성하되, 실제 API 호출시 예외가 발생하면 Mock 데이터 사용
-            return new GeoApiContext.Builder()
-                    .apiKey("dummy-key")
-                    .build();
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            log.warn("Google Maps API 키가 설정되지 않았습니다. Mock 데이터를 사용합니다.");
+        } else {
+            log.info("Google Maps API 키가 설정되었습니다. 키 길이: {}", apiKey.length());
         }
         
-        log.info("Google Maps API Key가 설정되었습니다.");
         return new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();

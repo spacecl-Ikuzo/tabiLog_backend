@@ -1,5 +1,6 @@
 package com.ikuzo.tabilog.domain.token;
 
+import com.ikuzo.tabilog.domain.user.User;
 import com.ikuzo.tabilog.domain.user.UserRepository;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,14 @@ public class RefreshTokenService {
 
     @Transactional
     public RefreshToken createRefreshToken(Long userId) {
-        // 기존 토큰이 있다면 삭제
-        refreshTokenRepository.findByUser(userRepository.findById(userId).orElseThrow())
-                .ifPresent(refreshTokenRepository::delete);
+        User user = userRepository.findById(userId).orElseThrow();
+        
+        // 기존 토큰이 있다면 삭제 (deleteByUser 사용)
+        refreshTokenRepository.deleteByUser(user);
+        refreshTokenRepository.flush(); // 즉시 삭제 반영
 
         RefreshToken refreshToken = new RefreshToken(
-                userRepository.findById(userId).orElseThrow(),
+                user,
                 UUID.randomUUID().toString(),
                 Instant.now().plusMillis(refreshTokenDurationMs)
         );

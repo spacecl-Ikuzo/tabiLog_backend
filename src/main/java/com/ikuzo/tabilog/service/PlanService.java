@@ -68,28 +68,28 @@ public class PlanService {
     }
 
     public List<PlanResponse> getUserPlans(Long userId) {
-        List<Plan> plans = planRepository.findAllByUserIdOrderByStartDateDesc(userId);
+        List<Plan> plans = planRepository.findAllByMemberUserIdOrderByStartDateDesc(userId);
         return plans.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     public List<PlanResponse> getActivePlans(Long userId) {
-        List<Plan> plans = planRepository.findActivePlansByUserId(userId);
+        List<Plan> plans = planRepository.findActivePlansByMemberUserId(userId);
         return plans.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     public List<PlanResponse> getUpcomingPlans(Long userId) {
-        List<Plan> plans = planRepository.findUpcomingPlansByUserId(userId);
+        List<Plan> plans = planRepository.findUpcomingPlansByMemberUserId(userId);
         return plans.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     public List<PlanResponse> getCompletedPlans(Long userId) {
-        List<Plan> plans = planRepository.findCompletedPlansByUserId(userId);
+        List<Plan> plans = planRepository.findCompletedPlansByMemberUserId(userId);
         return plans.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class PlanService {
 
     // 사용자의 여행 계획을 prefecture와 status로 필터링하여 조회
     public List<PlanResponse> getUserPlansWithFilters(Long userId, String prefecture, String status) {
-        List<Plan> plans = planRepository.findAllByUserIdOrderByStartDateDesc(userId);
+        List<Plan> plans = planRepository.findAllByMemberUserIdOrderByStartDateDesc(userId);
         
         // 필터링 적용 (빈 문자열, null, "전체"는 필터링하지 않음)
         if (!isEmptyOrNull(prefecture)) {

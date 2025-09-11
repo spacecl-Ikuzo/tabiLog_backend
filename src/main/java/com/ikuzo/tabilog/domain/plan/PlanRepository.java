@@ -62,4 +62,20 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     List<Plan> findPublicPlansWithFilters(@Param("region") String region, 
                                          @Param("prefecture") String prefecture, 
                                          @Param("status") String status);
+    
+    // 사용자가 작성하거나 멤버로 참여한 모든 여행 계획 조회
+    @Query("SELECT DISTINCT p FROM Plan p LEFT JOIN p.planMembers pm WHERE p.user.id = :userId OR pm.user.id = :userId ORDER BY p.startDate DESC")
+    List<Plan> findAllByMemberUserIdOrderByStartDateDesc(@Param("userId") Long userId);
+    
+    // 사용자가 작성하거나 멤버로 참여한 활성 여행 계획 조회
+    @Query("SELECT DISTINCT p FROM Plan p LEFT JOIN p.planMembers pm WHERE (p.user.id = :userId OR pm.user.id = :userId) AND p.startDate <= CURRENT_DATE AND p.endDate >= CURRENT_DATE ORDER BY p.startDate ASC")
+    List<Plan> findActivePlansByMemberUserId(@Param("userId") Long userId);
+    
+    // 사용자가 작성하거나 멤버로 참여한 예정된 여행 계획 조회
+    @Query("SELECT DISTINCT p FROM Plan p LEFT JOIN p.planMembers pm WHERE (p.user.id = :userId OR pm.user.id = :userId) AND p.startDate > CURRENT_DATE ORDER BY p.startDate ASC")
+    List<Plan> findUpcomingPlansByMemberUserId(@Param("userId") Long userId);
+    
+    // 사용자가 작성하거나 멤버로 참여한 완료된 여행 계획 조회
+    @Query("SELECT DISTINCT p FROM Plan p LEFT JOIN p.planMembers pm WHERE (p.user.id = :userId OR pm.user.id = :userId) AND p.endDate < CURRENT_DATE ORDER BY p.endDate DESC")
+    List<Plan> findCompletedPlansByMemberUserId(@Param("userId") Long userId);
 }

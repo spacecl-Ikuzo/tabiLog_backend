@@ -58,28 +58,28 @@ public class RegionController {
         return ResponseEntity.ok(ApiResponse.success(region + " 지역의 현(prefecture) 정보를 조회했습니다.", prefectures));
     }
 
-    // 지역별 대표 현들 매핑 (중복 제거 및 간소화)
+    // 지역별 대표 현들 매핑 (PlanService와 동일한 도시만 사용)
     private Map<String, List<String>> getRegionMappings() {
         Map<String, List<String>> regions = new HashMap<>();
         
-        // 동일본 - 도쿄 중심의 관동 지역과 주요 동부 현들
+        // 동일본 지역
         regions.put("東日本", Arrays.asList(
             "北海道", "東京都", "神奈川県", "埼玉県", "千葉県", "静岡県", "愛知県", "長野県"
         ));
         
-        // 서일본 - 관서(간사이) 지역과 규슈의 주요 현들
+        // 서일본 지역
         regions.put("西日本", Arrays.asList(
             "京都府", "大阪府", "兵庫県", "奈良県", "広島県", "福岡県", "熊本県", "沖縄県"
         ));
         
-        // 북일본 - 홋카이도와 동북 지역 주요 현들
+        // 북일본 지역 (北海道는 동일본과 중복이므로 제외)
         regions.put("北日本", Arrays.asList(
-            "北海道", "青森県", "宮城県", "福島県"
+            "青森県", "宮城県"
         ));
         
-        // 남일본 - 규슈와 오키나와 주요 현들
+        // 남일본 지역 (福岡県, 熊本県, 沖縄県은 서일본과 중복이므로 제외)
         regions.put("南日本", Arrays.asList(
-            "福岡県", "長崎県", "熊本県", "鹿児島県", "沖縄県"
+            "長崎県", "鹿児島県"
         ));
         
         return regions;

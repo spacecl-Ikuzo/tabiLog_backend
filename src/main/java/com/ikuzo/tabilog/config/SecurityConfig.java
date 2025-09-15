@@ -2,7 +2,6 @@ package com.ikuzo.tabilog.config;
 
 import com.ikuzo.tabilog.security.jwt.AuthEntryPointJwt;
 import com.ikuzo.tabilog.security.jwt.JwtAuthFilter;
-import com.ikuzo.tabilog.security.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +22,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
     private final JwtAuthFilter jwtAuthFilter;
     private final CorsConfigurationSource corsConfigurationSource;
@@ -68,6 +66,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/test/**").permitAll() // 테스트 API 허용 (개발용)
                         .requestMatchers("/api/plans/**").permitAll() // 플랜 API 허용 (개발용 - JWT 토큰 없이 테스트)
                         .requestMatchers("/api/categories/regions/**").permitAll() // 지역 API 허용
+                        .requestMatchers("/api/expenses/**").permitAll() // Expense API는 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/plans/**").permitAll() // Plan API도 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/spots/**").permitAll() // Spot API도 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/**").permitAll() // 모든 API 경로를 인증 없이 허용 (개발 단계)
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 );
 

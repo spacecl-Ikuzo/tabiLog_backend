@@ -101,6 +101,21 @@ CREATE TABLE IF NOT EXISTS travel_segment (
     FOREIGN KEY (daily_plan_id) REFERENCES daily_plan(id) ON DELETE CASCADE
 );
 
+-- 지출 테이블
+CREATE TABLE IF NOT EXISTS expenses (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    plan_id BIGINT NOT NULL,
+    spot_id BIGINT,
+    item VARCHAR(100) NOT NULL,
+    amount INT NOT NULL DEFAULT 0,
+    category VARCHAR(50) NOT NULL,
+    expense_date DATE NOT NULL,
+    created_at DATE DEFAULT (CURRENT_DATE),
+    updated_at DATE DEFAULT (CURRENT_DATE),
+    FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE CASCADE,
+    FOREIGN KEY (spot_id) REFERENCES spot(id) ON DELETE CASCADE
+);
+
 -- 인덱스 생성
 CREATE INDEX IF NOT EXISTS idx_user_email ON user(email);
 CREATE INDEX IF NOT EXISTS idx_user_nickname ON user(nickname);
@@ -120,3 +135,7 @@ CREATE INDEX IF NOT EXISTS idx_spot_category ON spot(category);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_daily_plan_id ON travel_segment(daily_plan_id);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_from_spot ON travel_segment(from_spot_id);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_to_spot ON travel_segment(to_spot_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_plan_id ON expenses(plan_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_spot_id ON expenses(spot_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(category);
+CREATE INDEX IF NOT EXISTS idx_expenses_date ON expenses(expense_date);

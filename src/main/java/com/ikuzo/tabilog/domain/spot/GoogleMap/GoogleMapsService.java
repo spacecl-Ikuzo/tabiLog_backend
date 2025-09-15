@@ -103,17 +103,80 @@ public class GoogleMapsService {
     }
 
     public GoogleDirectionsResponse getDirections(double lat1, double lng1, double lat2, double lng2, String travelMode) {
+        return getDirections(lat1, lng1, lat2, lng2, travelMode, null, null, null);
+    }
+
+    public GoogleDirectionsResponse getDirections(double lat1, double lng1, double lat2, double lng2, String travelMode, 
+                                                String departureTime, String transitPreferences, String dayOfWeek) {
         try {
             LatLng origin = new LatLng(lat1, lng1);
             LatLng destination = new LatLng(lat2, lng2);
             
-            log.info("경로 조회 요청 - 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", lat1, lng1, lat2, lng2, travelMode);
+            log.info("경로 조회 요청 - 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}, 출발시간: {}, 대중교통설정: {}, 요일: {}", 
+                     lat1, lng1, lat2, lng2, travelMode, departureTime, transitPreferences, dayOfWeek);
             
-            DirectionsResult result = DirectionsApi.newRequest(geoApiContext)
+            // Directions API 요청 생성
+            var request = DirectionsApi.newRequest(geoApiContext)
                     .origin(origin)
                     .destination(destination)
-                    .mode(com.google.maps.model.TravelMode.valueOf(travelMode.toUpperCase()))
-                    .await();
+                    .mode(com.google.maps.model.TravelMode.valueOf(travelMode.toUpperCase()));
+            
+            // 출발시간 설정 (TRANSIT 모드일 때 중요)
+            if (departureTime != null && !departureTime.trim().isEmpty()) {
+                try {
+                    // departureTime 형식: "HH:mm" (예: "14:30")
+                    String[] timeParts = departureTime.split(":");
+                    if (timeParts.length == 2) {
+                        int hour = Integer.parseInt(timeParts[0]);
+                        int minute = Integer.parseInt(timeParts[1]);
+                        
+                        // 현재 날짜에 시간 설정
+                        java.time.LocalDateTime departureDateTime = java.time.LocalDateTime.now()
+                                .withHour(hour)
+                                .withMinute(minute)
+                                .withSecond(0)
+                                .withNano(0);
+                        
+                        // Google Maps API는 Instant를 사용
+                        java.time.Instant departureInstant = departureDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant();
+                        request.departureTime(departureInstant);
+                        
+                        log.info("출발시간 설정: {}", departureDateTime);
+                    }
+                } catch (Exception e) {
+                    log.warn("출발시간 파싱 실패: {}, 기본값 사용", departureTime);
+                }
+            }
+            
+            // 대중교통 설정 (TRANSIT 모드일 때)
+            if ("TRANSIT".equalsIgnoreCase(travelMode) && transitPreferences != null && !transitPreferences.trim().isEmpty()) {
+                // Google Maps API의 TransitPreferences 설정
+                if ("less_walking".equalsIgnoreCase(transitPreferences)) {
+                    // 걷는 시간을 최소화하는 설정은 API에서 직접 지원하지 않으므로
+                    // 대안으로 여러 경로를 요청하고 가장 걷는 시간이 적은 것을 선택
+                    log.info("대중교통 설정: 걷는 시간 최소화");
+                } else if ("fewer_transfers".equalsIgnoreCase(transitPreferences)) {
+                    // 환승 횟수를 최소화하는 설정
+                    log.info("대중교통 설정: 환승 횟수 최소화");
+                }
+            }
+            
+            // TRANSIT 모드에서 출발시간이 없으면 현재 시간 사용
+            if ("TRANSIT".equalsIgnoreCase(travelMode) && (departureTime == null || departureTime.trim().isEmpty())) {
+                java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                java.time.Instant currentTime = now.atZone(java.time.ZoneId.systemDefault()).toInstant();
+                request.departureTime(currentTime);
+                log.info("TRANSIT 모드: 출발시간이 없어 현재 시간 사용 - {}", now);
+            }
+            
+            // 요일 설정 (TRANSIT 모드일 때)
+            if ("TRANSIT".equalsIgnoreCase(travelMode) && dayOfWeek != null && !dayOfWeek.trim().isEmpty()) {
+                log.info("요일 설정: {}", dayOfWeek);
+                // Google Maps API는 자동으로 현재 요일을 고려하므로 별도 설정 불필요
+                // 하지만 로그로 기록하여 디버깅에 활용
+            }
+            
+            DirectionsResult result = request.await();
             
             if (result.routes == null || result.routes.length == 0) {
                 log.warn("경로를 찾을 수 없습니다. 출발지: ({}, {}), 도착지: ({}, {})", lat1, lng1, lat2, lng2);
@@ -134,6 +197,29 @@ public class GoogleMapsService {
         } catch (com.google.maps.errors.ZeroResultsException e) {
             log.warn("경로를 찾을 수 없습니다. 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", 
                      lat1, lng1, lat2, lng2, travelMode);
+            
+            // TRANSIT 모드에서 경로를 찾을 수 없으면 WALKING 모드로 fallback 시도
+            if ("TRANSIT".equalsIgnoreCase(travelMode)) {
+                log.info("TRANSIT 모드에서 경로 없음, WALKING 모드로 fallback 시도");
+                try {
+                    LatLng fallbackOrigin = new LatLng(lat1, lng1);
+                    LatLng fallbackDestination = new LatLng(lat2, lng2);
+                    
+                    var fallbackRequest = DirectionsApi.newRequest(geoApiContext)
+                            .origin(fallbackOrigin)
+                            .destination(fallbackDestination)
+                            .mode(com.google.maps.model.TravelMode.WALKING);
+                    
+                    DirectionsResult fallbackResult = fallbackRequest.await();
+                    if (fallbackResult.routes != null && fallbackResult.routes.length > 0) {
+                        log.info("WALKING 모드 fallback 성공");
+                        return convertToDirectionsResponse(fallbackResult);
+                    }
+                } catch (Exception fallbackException) {
+                    log.warn("WALKING 모드 fallback도 실패: {}", fallbackException.getMessage());
+                }
+            }
+            
             return GoogleDirectionsResponse.builder()
                     .status("ZERO_RESULTS")
                     .errorMessage("해당 경로를 찾을 수 없습니다. 다른 이동수단을 시도해보세요.")
@@ -149,7 +235,7 @@ public class GoogleMapsService {
                      lat1, lng1, lat2, lng2, travelMode, e.getClass().getSimpleName(), e);
             
             // Mock 데이터를 반환하여 기본적인 경로 정보 제공
-            return getMockDirections(lat1, lng1, lat2, lng2, travelMode);
+            return getMockDirections(lat1, lng1, lat2, lng2, travelMode, departureTime, transitPreferences, dayOfWeek);
         }
     }
 
@@ -288,11 +374,64 @@ public class GoogleMapsService {
     }
 
     private GoogleDirectionsResponse getMockDirections(double lat1, double lng1, double lat2, double lng2, String travelMode) {
-        log.info("Mock 경로 데이터를 반환합니다. 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}", lat1, lng1, lat2, lng2, travelMode);
+        return getMockDirections(lat1, lng1, lat2, lng2, travelMode, null, null, null);
+    }
+
+    private GoogleDirectionsResponse getMockDirections(double lat1, double lng1, double lat2, double lng2, String travelMode, 
+                                                     String departureTime, String transitPreferences, String dayOfWeek) {
+        log.info("Mock 경로 데이터를 반환합니다. 출발지: ({}, {}), 도착지: ({}, {}), 이동수단: {}, 출발시간: {}, 대중교통설정: {}, 요일: {}", 
+                 lat1, lng1, lat2, lng2, travelMode, departureTime, transitPreferences, dayOfWeek);
         
         // 거리 계산 (간단한 유클리드 거리)
         double distance = Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lng2 - lng1, 2)) * 111000; // 대략적인 미터 변환
-        int durationMinutes = (int) (distance / 1000 * 15); // 대략적인 시간 계산 (km당 15분)
+        
+        // 이동수단에 따른 시간 계산
+        int durationMinutes;
+        switch (travelMode.toUpperCase()) {
+            case "WALKING":
+                durationMinutes = (int) (distance / 1000 * 12); // km당 12분 (보행)
+                break;
+            case "DRIVING":
+                durationMinutes = (int) (distance / 1000 * 3); // km당 3분 (자동차)
+                break;
+            case "BICYCLING":
+                durationMinutes = (int) (distance / 1000 * 6); // km당 6분 (자전거)
+                break;
+            case "TRANSIT":
+                // 대중교통은 더 복잡한 계산이 필요하지만 간단히 처리
+                durationMinutes = (int) (distance / 1000 * 8); // km당 8분 (대중교통)
+                
+                // 대중교통 설정에 따른 조정
+                if ("less_walking".equalsIgnoreCase(transitPreferences)) {
+                    durationMinutes += 5; // 걷는 시간 최소화를 위해 약간 더 시간 소요
+                } else if ("fewer_transfers".equalsIgnoreCase(transitPreferences)) {
+                    durationMinutes += 10; // 환승 횟수 최소화를 위해 더 많은 시간 소요
+                }
+                
+                // 요일별 조정 (주말에는 배차 간격이 길 수 있음)
+                if ("weekend".equalsIgnoreCase(dayOfWeek)) {
+                    durationMinutes += 5; // 주말에는 약간 더 시간 소요
+                }
+                
+                // 출발시간이 있는 경우 더 현실적인 계산
+                if (departureTime != null && !departureTime.trim().isEmpty()) {
+                    try {
+                        String[] timeParts = departureTime.split(":");
+                        if (timeParts.length == 2) {
+                            int hour = Integer.parseInt(timeParts[0]);
+                            // 출발시간이 새벽이나 늦은 밤이면 대중교통 이용이 어려울 수 있음
+                            if (hour < 6 || hour > 23) {
+                                durationMinutes += 15; // 대중교통 이용이 어려운 시간대
+                            }
+                        }
+                    } catch (Exception e) {
+                        // 파싱 실패 시 기본값 유지
+                    }
+                }
+                break;
+            default:
+                durationMinutes = (int) (distance / 1000 * 15); // 기본값
+        }
         
         List<GoogleDirectionsResponse.Step> steps = new ArrayList<>();
         steps.add(GoogleDirectionsResponse.Step.builder()
@@ -330,10 +469,23 @@ public class GoogleMapsService {
                 .overviewPolyline("mock_polyline")
                 .build());
         
+        String mockMessage = "Google Maps API를 사용할 수 없어 Mock 데이터를 제공합니다.";
+        if (departureTime != null || transitPreferences != null || dayOfWeek != null) {
+            mockMessage += String.format(" (출발시간: %s, 대중교통설정: %s, 요일: %s)", 
+                departureTime != null ? departureTime : "없음",
+                transitPreferences != null ? transitPreferences : "없음", 
+                dayOfWeek != null ? dayOfWeek : "없음");
+        }
+        
+        // TRANSIT 모드에 대한 추가 안내
+        if ("TRANSIT".equalsIgnoreCase(travelMode)) {
+            mockMessage += " [TRANSIT 모드: 실제 대중교통 정보와 다를 수 있습니다]";
+        }
+        
         return GoogleDirectionsResponse.builder()
                 .status("OK")
                 .routes(routes)
-                .errorMessage("Google Maps API를 사용할 수 없어 Mock 데이터를 제공합니다.")
+                .errorMessage(mockMessage)
                 .build();
     }
 }

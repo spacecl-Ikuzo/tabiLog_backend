@@ -16,6 +16,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Long id;
     private final String email;
+    private final String userId;
     private final String nickname;
 
     @JsonIgnore
@@ -24,9 +25,10 @@ public class UserDetailsImpl implements UserDetails {
     // 현재는 모든 유저가 동일한 권한을 가지므로 간단하게 처리
     private final Collection<? extends GrantedAuthority> authorities = Collections.emptyList();
 
-    public UserDetailsImpl(Long id, String email, String password, String nickname) {
+    public UserDetailsImpl(Long id, String email, String userId, String password, String nickname) {
         this.id = id;
         this.email = email;
+        this.userId = userId;
         this.password = password;
         this.nickname = nickname;
     }
@@ -35,6 +37,7 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getEmail(),
+                user.getUserId(),
                 user.getPassword(),
                 user.getNickname());
     }

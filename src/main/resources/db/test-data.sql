@@ -2,9 +2,9 @@
 -- 로컬 테스트용 샘플 데이터
 
 -- 테스트 사용자 데이터
-INSERT INTO user (email, password, first_name, last_name, gender, phone_number, nickname, privacy_agreement, public_agreement) VALUES
-('test@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '홍', '길동', 'MALE', '010-1234-5678', 'honggildong', TRUE, TRUE),
-('admin@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '관리', '자', 'FEMALE', '010-9876-5432', 'admin', TRUE, TRUE);
+INSERT INTO user (email, user_id, password, first_name, last_name, gender, phone_number, nickname, privacy_agreement, public_agreement) VALUES
+('test@example.com', 'testuser1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '홍', '길동', 'MALE', '010-1234-5678', 'honggildong', TRUE, TRUE),
+('admin@example.com', 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDi', '관리', '자', 'FEMALE', '010-9876-5432', 'admin', TRUE, TRUE);
 
 -- 테스트 여행 계획 데이터
 INSERT INTO plan (title, start_date, end_date, total_budget, user_id) VALUES

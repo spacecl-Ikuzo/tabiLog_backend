@@ -13,6 +13,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -20,6 +22,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+    
     private final JwtUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -29,7 +33,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         
         // 인증이 필요하지 않은 경로들은 JWT 필터를 건너뛰기
         String requestURI = request.getRequestURI();
+        String method = request.getMethod();
+        logger.debug("JWT Filter - Method: {}, URI: {}", method, requestURI);
+        
         if (shouldSkipFilter(requestURI)) {
+            logger.debug("JWT Filter - Skipping filter for URI: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,8 +65,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
     
     private boolean shouldSkipFilter(String requestURI) {
-        // 개발 단계에서는 모든 API 경로를 인증 없이 허용
-        return requestURI.startsWith("/api/");
+        // 개발 단계에서는 모든 API 경로와 auth 경로를 인증 없이 허용
+        return requestURI.startsWith("/api/") || requestURI.startsWith("/auth/");
     }
 
     private String parseJwt(HttpServletRequest request) {

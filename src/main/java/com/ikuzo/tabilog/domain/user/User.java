@@ -24,6 +24,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String userId; // 사용자가 로그인할 때 사용하는 ID
+
     @Column(nullable = false)
     private String password;
 
@@ -59,8 +62,9 @@ public class User {
     private List<com.ikuzo.tabilog.domain.plan.PlanMember> planMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String firstName, String lastName, String gender, String phoneNumber, String nickname, Boolean privacyAgreement, Boolean publicAgreement) {
+    public User(String email, String userId, String password, String firstName, String lastName, String gender, String phoneNumber, String nickname, Boolean privacyAgreement, Boolean publicAgreement) {
         this.email = email;
+        this.userId = userId;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;

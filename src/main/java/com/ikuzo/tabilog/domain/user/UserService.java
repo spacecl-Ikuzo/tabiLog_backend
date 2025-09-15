@@ -28,9 +28,12 @@ public class UserService {
             throw new IllegalArgumentException("개인정보 처리방침에 동의해야 회원가입이 가능합니다.");
         }
         
-        // 이메일 또는 닉네임 중복 여부 확인
+        // 이메일, 사용자 ID, 닉네임 중복 여부 확인
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException("이미 사용 중인 이메일입니다: " + request.getEmail());
+        }
+        if (userRepository.existsByUserId(request.getUserId())) {
+            throw new DuplicateResourceException("이미 사용 중인 사용자 ID입니다: " + request.getUserId());
         }
         if (userRepository.existsByNickname(request.getNickname())) {
             throw new DuplicateResourceException("이미 사용 중인 닉네임입니다: " + request.getNickname());
@@ -39,6 +42,7 @@ public class UserService {
         // User 엔티티 생성
         User newUser = User.builder()
                 .email(request.getEmail())
+                .userId(request.getUserId())
                 .password(passwordEncoder.encode(request.getPassword())) // 비밀번호는 반드시 암호화하여 저장
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())

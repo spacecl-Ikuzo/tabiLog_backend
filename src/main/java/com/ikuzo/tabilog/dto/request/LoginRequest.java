@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
     @NotBlank
-    private String username; // 이메일 또는 닉네임
+    private String id; // 이메일 또는 닉네임
 
     @NotBlank
     private String password;

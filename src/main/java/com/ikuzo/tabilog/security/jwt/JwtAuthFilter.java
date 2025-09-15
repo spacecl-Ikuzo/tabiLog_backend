@@ -44,10 +44,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         
         try {
             String jwt = parseJwt(request);
+            logger.debug("JWT Token parsed: {}", jwt != null ? "found" : "null");
+            
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                logger.debug("Username from JWT: {}", username);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                logger.debug("UserDetails loaded: {}", userDetails.getUsername());
+                
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -56,17 +61,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.debug("Authentication set successfully");
+            } else {
+                logger.debug("JWT validation failed or JWT is null");
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            logger.error("Cannot set user authentication: {}", e.getMessage(), e);
         }
 
         filterChain.doFilter(request, response);
     }
     
     private boolean shouldSkipFilter(String requestURI) {
-        // 개발 단계에서는 모든 API 경로와 auth 경로를 인증 없이 허용
-        return requestURI.startsWith("/api/") || requestURI.startsWith("/auth/");
+        // 인증이 필요하지 않은 특정 경로들만 건너뛰기
+        return requestURI.startsWith("/api/auth/") ||
+               requestURI.startsWith("/auth/") ||
+               requestURI.startsWith("/api/spots/google-search") ||
+               requestURI.startsWith("/api/spots/nearby") ||
+               requestURI.startsWith("/api/spots/directions") ||
+               requestURI.startsWith("/api/spots/travel-time") ||
+               requestURI.startsWith("/api/spots/address") ||
+               requestURI.startsWith("/api/categories/regions/") ||
+               requestURI.equals("/api/plans/public") ||
+               requestURI.startsWith("/static/") ||
+               requestURI.startsWith("/images/") ||
+               requestURI.startsWith("/h2-console/") ||
+               requestURI.equals("/") ||
+               requestURI.equals("/health") ||
+               requestURI.equals("/favicon.ico");
     }
 
     private String parseJwt(HttpServletRequest request) {

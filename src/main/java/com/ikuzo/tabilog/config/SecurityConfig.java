@@ -2,12 +2,10 @@ package com.ikuzo.tabilog.config;
 
 import com.ikuzo.tabilog.security.jwt.AuthEntryPointJwt;
 import com.ikuzo.tabilog.security.jwt.JwtAuthFilter;
-import com.ikuzo.tabilog.security.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
     private final JwtAuthFilter jwtAuthFilter;
     private final CorsConfigurationSource corsConfigurationSource;
@@ -57,6 +54,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/spots/google-search").permitAll() // Google Maps 검색 API는 인증 없이 허용
                         .requestMatchers("/api/spots/nearby").permitAll() // Google Maps 주변 검색 API는 인증 없이 허용
                         .requestMatchers("/api/spots/directions").permitAll() // Google Maps 경로 API는 인증 없이 허용
+                        .requestMatchers("/api/expenses/**").permitAll() // Expense API는 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/plans/**").permitAll() // Plan API도 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/spots/**").permitAll() // Spot API도 인증 없이 허용 (개발 단계)
+                        .requestMatchers("/api/**").permitAll() // 모든 API 경로를 인증 없이 허용 (개발 단계)
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 );
 

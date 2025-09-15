@@ -26,6 +26,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        
+        // 인증이 필요하지 않은 경로들은 JWT 필터를 건너뛰기
+        String requestURI = request.getRequestURI();
+        if (shouldSkipFilter(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
@@ -46,6 +54,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+    
+    private boolean shouldSkipFilter(String requestURI) {
+        // 개발 단계에서는 모든 API 경로를 인증 없이 허용
+        return requestURI.startsWith("/api/");
     }
 
     private String parseJwt(HttpServletRequest request) {

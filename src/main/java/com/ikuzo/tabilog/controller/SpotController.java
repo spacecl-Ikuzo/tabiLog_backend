@@ -1,6 +1,5 @@
 package com.ikuzo.tabilog.controller;
 
-import com.ikuzo.tabilog.domain.spot.Spot;
 import com.ikuzo.tabilog.domain.spot.GoogleMap.GoogleMapsService;
 import com.ikuzo.tabilog.dto.response.GooglePlaceResponse;
 import com.ikuzo.tabilog.dto.response.GoogleDirectionsResponse;
@@ -135,9 +134,13 @@ public class SpotController {
             @RequestParam double lng1,
             @RequestParam double lat2,
             @RequestParam double lng2,
-            @RequestParam(required = false, defaultValue = "WALKING") String travelMode) {
+            @RequestParam(required = false, defaultValue = "WALKING") String travelMode,
+            @RequestParam(required = false) String departureTime,
+            @RequestParam(required = false) String transitPreferences,
+            @RequestParam(required = false) String dayOfWeek) {
         
-        GoogleDirectionsResponse directions = googleMapsService.getDirections(lat1, lng1, lat2, lng2, travelMode);
+        GoogleDirectionsResponse directions = googleMapsService.getDirections(
+            lat1, lng1, lat2, lng2, travelMode, departureTime, transitPreferences, dayOfWeek);
         
         return ResponseEntity.ok(ApiResponse.success(directions));
     }

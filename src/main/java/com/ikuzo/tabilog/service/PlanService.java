@@ -4,6 +4,8 @@ import com.ikuzo.tabilog.domain.plan.DailyPlan;
 import com.ikuzo.tabilog.domain.plan.DailyPlanRepository;
 import com.ikuzo.tabilog.domain.plan.Plan;
 import com.ikuzo.tabilog.domain.plan.PlanMember;
+import com.ikuzo.tabilog.domain.plan.PlanMemberRepository;
+import com.ikuzo.tabilog.domain.plan.PlanMemberRole;
 import com.ikuzo.tabilog.domain.plan.PlanRepository;
 import com.ikuzo.tabilog.domain.user.User;
 import com.ikuzo.tabilog.domain.user.UserRepository;
@@ -29,6 +31,7 @@ public class PlanService {
 
     private final PlanRepository planRepository;
     private final DailyPlanRepository dailyPlanRepository;
+    private final PlanMemberRepository planMemberRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -45,6 +48,14 @@ public class PlanService {
                 .build();
 
         Plan savedPlan = planRepository.save(plan);
+
+        // 계획 작성자를 OWNER로 PlanMember 테이블에 추가
+        PlanMember ownerMember = PlanMember.builder()
+                .plan(savedPlan)
+                .user(user)
+                .role(PlanMemberRole.OWNER)
+                .build();
+        planMemberRepository.save(ownerMember);
 
         // 일별 계획 생성
         if (request.getDailyPlans() != null) {
@@ -223,6 +234,22 @@ public class PlanService {
                 .map(this::convertToMemberResponse)
                 .collect(Collectors.toList());
 
+        // 계획 작성자가 members에 없으면 OWNER로 추가 (기존 데이터 호환성)
+        boolean ownerExists = memberResponses.stream()
+                .anyMatch(member -> member.getUserId().equals(plan.getUser().getId()));
+        
+        if (!ownerExists) {
+            PlanMemberResponse ownerResponse = PlanMemberResponse.builder()
+                    .id(null) // 실제 PlanMember 엔티티가 없는 경우
+                    .userId(plan.getUser().getId())
+                    .userIdString(plan.getUser().getUserId())
+                    .userNickname(plan.getUser().getNickname())
+                    .userEmail(plan.getUser().getEmail())
+                    .role(PlanMemberRole.OWNER)
+                    .build();
+            memberResponses.add(0, ownerResponse); // 첫 번째에 추가
+        }
+
         return PlanResponse.builder()
                 .id(plan.getId())
                 .title(plan.getTitle())
@@ -259,6 +286,7 @@ public class PlanService {
         return PlanMemberResponse.builder()
                 .id(planMember.getId())
                 .userId(planMember.getUser().getId())
+                .userIdString(planMember.getUser().getUserId())
                 .userNickname(planMember.getUser().getNickname())
                 .userEmail(planMember.getUser().getEmail())
                 .role(planMember.getRole())

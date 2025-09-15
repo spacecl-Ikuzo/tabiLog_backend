@@ -72,4 +72,4 @@ application-secret.properties
 *.sqlite
 
 # Docker
-.dockerignore
+.dockerignore* 2.*

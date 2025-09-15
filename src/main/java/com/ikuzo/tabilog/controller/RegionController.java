@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/categories/regions")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:5173", "http://localhost:8082", "http://127.0.0.1:3000", "http://127.0.0.1:5173"}, 
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:5173", "http://localhost:8080", "http://127.0.0.1:3000", "http://127.0.0.1:5173"}, 
              allowCredentials = "true",
              allowedHeaders = "*",
              methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})

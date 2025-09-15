@@ -9,11 +9,13 @@ public class JwtResponse {
     private String type = "Bearer";
     private String email; // 사용자 식별을 위해 email 반환
     private String userId; // 사용자 ID 반환
+    private String nickname; // 닉네임 반환
 
-    public JwtResponse(String accessToken, String refreshToken, String email, String userId) {
+    public JwtResponse(String accessToken, String refreshToken, String email, String userId, String nickname) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.email = email;
         this.userId = userId;
+        this.nickname = nickname;
     }
 }

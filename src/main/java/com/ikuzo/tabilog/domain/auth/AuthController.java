@@ -56,7 +56,7 @@ public class AuthController {
         // Refresh Token 생성
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId()));
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));
     }
 
     @PostMapping("/signup")

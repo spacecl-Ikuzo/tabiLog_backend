@@ -17,6 +17,7 @@ import com.ikuzo.tabilog.dto.response.TokenRefreshResponse;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import com.ikuzo.tabilog.security.jwt.JwtUtils;
 import com.ikuzo.tabilog.security.services.UserDetailsImpl;
+import com.ikuzo.tabilog.service.PlanInvitationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
+    private final PlanInvitationService planInvitationService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -55,6 +57,16 @@ public class AuthController {
         
         // Refresh Token 생성
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        // 초대 토큰이 있는 경우 자동으로 초대 수락 처리
+        if (loginRequest.getInvitationToken() != null && !loginRequest.getInvitationToken().trim().isEmpty()) {
+            try {
+                planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId());
+            } catch (Exception e) {
+                // 초대 수락 실패 시 로그만 남기고 로그인은 계속 진행
+                System.out.println("로그인 시 초대 자동 수락 실패: " + e.getMessage());
+            }
+        }
 
         return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));
     }

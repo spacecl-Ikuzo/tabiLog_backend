@@ -41,4 +41,7 @@ public class UserSignupRequest {
     private Boolean privacyAgreement; // 개인정보동의서 (필수)
     
     private Boolean publicAgreement; // 공개동의서 (선택)
+    
+    // 초대 토큰 (선택적)
+    private String invitationToken;
 }

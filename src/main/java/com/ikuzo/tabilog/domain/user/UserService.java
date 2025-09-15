@@ -5,18 +5,28 @@ import com.ikuzo.tabilog.dto.request.UserProfileUpdateRequest;
 import com.ikuzo.tabilog.dto.request.UserPasswordChangeRequest;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
+import com.ikuzo.tabilog.service.PlanInvitationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor 
 @Transactional(readOnly = true) // 기본적으로 모든 메소드는 읽기 전용 트랜잭션으로 설정합니다.
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlanInvitationService planInvitationService;
+
+    public UserService(UserRepository userRepository, 
+                      PasswordEncoder passwordEncoder,
+                      @Lazy PlanInvitationService planInvitationService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.planInvitationService = planInvitationService;
+    }
 
     /**
      * 회원가입
@@ -53,7 +63,20 @@ public class UserService {
                 .publicAgreement(request.getPublicAgreement())
                 .build();
 
-        return userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+
+        // 초대 토큰이 있는 경우 자동으로 초대 수락 처리
+        if (request.getInvitationToken() != null && !request.getInvitationToken().trim().isEmpty()) {
+            try {
+                planInvitationService.acceptInvitation(request.getInvitationToken(), savedUser.getId());
+            } catch (Exception e) {
+                // 초대 수락 실패 시 로그만 남기고 회원가입은 계속 진행
+                // 사용자가 수동으로 초대를 수락할 수 있도록 함
+                System.out.println("초대 자동 수락 실패: " + e.getMessage());
+            }
+        }
+
+        return savedUser;
     }
 
     /**

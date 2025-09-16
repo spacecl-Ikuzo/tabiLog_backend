@@ -44,6 +44,12 @@ public class PlanService {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .totalBudget(request.getTotalBudget())
+                .region(request.getRegion())
+                .prefecture(request.getPrefecture())
+                .prefectureImageUrl(request.getPrefectureImageUrl())
+                .participant_count(1L) // 기본값: 1명 (생성자)
+                .status("PLANNING") // 기본값: 계획 중
+                .isPublic(false) // 기본값: 비공개
                 .user(user)
                 .build();
 

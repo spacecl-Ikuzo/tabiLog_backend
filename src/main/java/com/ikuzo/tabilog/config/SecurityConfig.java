@@ -60,7 +60,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/spots/travel-time").permitAll() // 이동 시간 API 허용
                         .requestMatchers("/api/spots/address").permitAll() // 주소 변환 API 허용
                         .requestMatchers("/api/categories/regions/**").permitAll() // 지역 API 허용
+                        .requestMatchers("/api/upload/**").authenticated() // 파일 업로드는 인증 필요
+                        .requestMatchers("/uploads/**").permitAll() // 업로드된 파일 접근은 허용
                         .requestMatchers("/api/plans/public").permitAll() // 공개 계획 조회는 인증 없이 허용
+                        .requestMatchers("/api/mypage/**").authenticated() // 마이페이지는 인증 필요
                         .requestMatchers("/", "/health").permitAll() // 루트 경로와 헬스 체크 허용
                         .requestMatchers("/favicon.ico").permitAll() // 파비콘 허용
                         .requestMatchers("/static/**").permitAll() // 정적 리소스 허용

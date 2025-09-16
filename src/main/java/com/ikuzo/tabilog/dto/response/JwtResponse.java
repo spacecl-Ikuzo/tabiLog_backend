@@ -7,15 +7,22 @@ public class JwtResponse {
     private String accessToken;
     private String refreshToken;
     private String type = "Bearer";
-    private String email; // 사용자 식별을 위해 email 반환
-    private String userId; // 사용자 ID 반환
-    private String nickname; // 닉네임 반환
+    private String email;     // 사용자 식별을 위해 email 반환
+    private String userId;    // 사용자 ID 반환
+    private String nickname;  // 닉네임 반환
+    private long   expiresAt; // ★추가: 액세스 토큰 만료 시각 (epoch millis)
 
-    public JwtResponse(String accessToken, String refreshToken, String email, String userId, String nickname) {
+    public JwtResponse(String accessToken,
+                       String refreshToken,
+                       String email,
+                       String userId,
+                       String nickname,
+                       long expiresAt) { // ★추가
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.email = email;
         this.userId = userId;
         this.nickname = nickname;
+        this.expiresAt = expiresAt; // ★추가
     }
 }

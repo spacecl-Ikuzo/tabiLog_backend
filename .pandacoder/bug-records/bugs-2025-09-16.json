@@ -1,0 +1,1410 @@
+[
+  {
+    "id": "c9054b8b-cd77-44eb-9283-ae166d7eff21",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:23",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "544af4bf-873c-4898-a87b-d1af72318d5c",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:23",
+    "errorType": "UNKNOWN",
+    "errorMessage": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol",
+    "summary": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthCon...",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol\n                    String token \u003d jwtUtils.generateJwtTokenFromEmail(user.getEmail());",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "29bf216b-b53b-494f-b67d-506d8e20dea4",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:23",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   method generateJwtTokenFromEmail(String)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "a49b27e2-b96a-4927-a3b7-410909465947",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:23",
+    "errorType": "UNKNOWN",
+    "errorMessage": "location: variable jwtUtils of type JwtUtils",
+    "summary": "location: variable jwtUtils of type JwtUtils",
+    "stackTrace": [],
+    "rawText": "location: variable jwtUtils of type JwtUtils\n1 error",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "30426e69-7207-4801-a4e4-34324a516ded",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "FAILURE:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "091eef0d-dab0-444e-b419-b00a050830cf",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Build failed with an exception.",
+    "summary": "Build failed with an exception.",
+    "stackTrace": [],
+    "rawText": "Build failed with an exception.\n\n* What went wrong:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "5ecc7ddb-be4f-4ead-83cc-9f618debba32",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Execution failed for task \u0027:compileJava\u0027.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "504b6db6-9ca7-48df-a848-b272771ae1b5",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "3e781281-3bc5-4ce4-9aa7-29f76bf183cc",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "COMPILATION",
+    "errorMessage": "Compilation failed; see the compiler output below.",
+    "summary": "Compilation failed; see the compiler output below.",
+    "stackTrace": [],
+    "rawText": "Compilation failed; see the compiler output below.\n  /Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "bc818f63-6e80-4357-9638-c3dd97abddc5",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "String token \u003d jwtUtils.generateJwtTokenFromEmail(user.getEmail());",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1d86a343-4344-4aa6-be72-75af01b41f24",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "84a40e39-a163-40f1-9f0a-f59306ab1446",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   method generateJwtTokenFromEmail(String)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "3a93d1ac-410f-4069-a867-a958d482fb20",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: variable jwtUtils of type JwtUtils",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "8b170e2e-17b3-4eac-94f7-17c1bf9b24cb",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "1 error",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "00e7ba02-75f0-4931-91e2-85e831d4202d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "* Try:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "602dc508-41e5-4fcd-90b6-98509953a494",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "ebdfe05d-be46-48fe-bc9d-51aec205028c",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "COMPILATION",
+    "errorMessage": "Check your code and dependencies to fix the compilation error(s)",
+    "summary": "Check your code and dependencies to fix the compilation error(s)",
+    "stackTrace": [],
+    "rawText": "Check your code and dependencies to fix the compilation error(s)\n\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "ee797d7f-5a72-4d40-94cf-d80ed7062e56",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:49:24",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Run with --scan to get full insights.",
+    "summary": "Run with --scan to get full insights.",
+    "stackTrace": [],
+    "rawText": "Run with --scan to get full insights.\n\nBUILD FAILED",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "85bb3c36-03a4-4a6a-803a-ef2b4ebb171e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol",
+    "summary": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthCon...",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol\n                    String token \u003d jwtUtils.generateJwtTokenFromEmail(user.getEmail());",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "f838e37b-b979-4dd2-9b91-bd0d60c9b48e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "eed73ffa-1e62-43fb-98ec-7c766a0b9357",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "7a0b1d9d-8958-4ad3-85ca-cdf30fb2f437",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   method generateJwtTokenFromEmail(String)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1766251a-e290-47f5-8d18-227fdd16893e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "location: variable jwtUtils of type JwtUtils",
+    "summary": "location: variable jwtUtils of type JwtUtils",
+    "stackTrace": [],
+    "rawText": "location: variable jwtUtils of type JwtUtils\n/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:121: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "3db9e129-bcd8-4601-a0d3-329fb9f59807",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Date now \u003d new Date();",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "4206d83d-e1a1-426f-bbbb-2311493d01ca",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "349f6a79-f1ad-4bbb-bf7f-f6a863b3a6c3",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "symbol:   class Date",
+    "summary": "symbol:   class Date",
+    "stackTrace": [],
+    "rawText": "symbol:   class Date\n  location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "e8a058c1-ec4c-45b1-901d-6cb621e409e1",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:121: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "9c85f3a9-a466-47c5-87b7-c1ca28d41547",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Date now \u003d new Date();",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "e90df721-091d-437e-960a-eb02c1fb01c2",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "189e5fd0-c9c8-47c2-a5fb-4e61e5fbc541",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   class Date",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "ce81391a-312f-4808-9691-d6726d5cbb0d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "332b5b89-0da4-40ed-83b7-f3c80312629c",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:122: error: cannot find symbol",
+    "summary": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthCon...",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:122: error: cannot find symbol\n        Date exp \u003d new Date(now.getTime() + jwtAccessExpirationMs);",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "621ccf7b-7e04-4f17-b5fd-559d886232f8",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   class Date",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "75d3cfeb-130c-4e0b-9c86-2683013c7b5f",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "57712bcc-23fe-4a2f-8885-bc7ac41ba64b",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:122: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "7f74beb4-5164-4ef7-ae85-0def29dd9f0e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Date exp \u003d new Date(now.getTime() + jwtAccessExpirationMs);",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "7e1cdd35-981c-4f14-9eb0-ef62f7bd3d15",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "2af9e451-9842-467b-bd60-2007956f9a9b",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   class Date",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "af9c19aa-aa14-4f05-8ef6-7cc4eb0cd651",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "54185211-d6d5-4cec-bb77-825a452aa085",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:122: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "208654f8-aa1c-4926-b482-2dc46a183d13",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Date exp \u003d new Date(now.getTime() + jwtAccessExpirationMs);",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1f74c00f-26fb-4be2-82c2-983ad6b3091b",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "eebd836b-ce83-46d9-814c-420776fb203c",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   variable jwtAccessExpirationMs",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "faf342e7-8cfb-457f-ba27-10e18179e924",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "d79105bd-ecf5-40a4-9fa5-79de59e079fa",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:127: error: package Jwts does not exist",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "7054a312-f45c-4bfa-8593-6d8d6b33aa1b",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": ".signWith(getSigningKey(), Jwts.SIG.HS256)",
+    "summary": ".signWith(getSigningKey(), Jwts.SIG.HS256)",
+    "stackTrace": [],
+    "rawText": ".signWith(getSigningKey(), Jwts.SIG.HS256)\n\n                                               ^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "60e2baa6-e941-4e47-8246-f69118c65b0d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:123: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "0a04033f-be01-41f1-a27b-17864ae4312d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "6293cd7d-ea84-432c-a9c1-1a056460be80",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "return Jwts.builder()",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "4eed37e1-4db9-4415-8932-e1b6fb17a68f",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "symbol:   variable Jwts",
+    "summary": "symbol:   variable Jwts",
+    "stackTrace": [],
+    "rawText": "symbol:   variable Jwts\n\n  location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "e1facd72-017c-49b5-b522-b1b09a95753d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:127: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1d5e6d17-8531-4bb2-86ca-43cf3a151c47",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: class AuthController",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "63cd88a9-8cfe-4d0f-bf72-83e173084449",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": ".signWith(getSigningKey(), Jwts.SIG.HS256)",
+    "summary": ".signWith(getSigningKey(), Jwts.SIG.HS256)",
+    "stackTrace": [],
+    "rawText": ".signWith(getSigningKey(), Jwts.SIG.HS256)\n                          ^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "a82ea3bc-6158-495e-b154-19029cc948c9",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "9 errors",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "72138206-7ac4-4322-803b-221442b577d9",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   method getSigningKey()",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "ca1fb328-6ca3-48a8-b169-b3264da45280",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "FAILURE:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "cfd92b48-9810-4cf1-a2d4-9de3ce226d4e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "0ac75287-0d17-4166-b879-301e3c369aa8",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Build failed with an exception.",
+    "summary": "Build failed with an exception.",
+    "stackTrace": [],
+    "rawText": "Build failed with an exception.\n\n* What went wrong:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "3febf0f6-4ad1-4057-95aa-b638c370c0a6",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Execution failed for task \u0027:compileJava\u0027.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "56fcfa50-16ba-4282-99a5-4338773edc3d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "COMPILATION",
+    "errorMessage": "Compilation failed; see the compiler output below.",
+    "summary": "Compilation failed; see the compiler output below.",
+    "stackTrace": [],
+    "rawText": "Compilation failed; see the compiler output below.\n  /Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:85: error: cannot find symbol",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "2db771e6-0c8e-4b9f-a9f7-44f7e8470cc2",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "String token \u003d jwtUtils.generateJwtTokenFromEmail(user.getEmail());",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "2d512141-9f5b-4713-a323-fab136ede483",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "location: variable jwtUtils of type JwtUtils",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "4105a1dc-3d97-467a-9173-deb86af9082d",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "ba638d1f-8033-4615-a161-b253b39a4046",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "symbol:   method generateJwtTokenFromEmail(String)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "98c7f0ae-4550-43bf-bda7-798132763071",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "9 errors",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "07fd0709-2756-431d-abcc-757c23261265",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "* Try:",
+    "summary": "* Try:",
+    "stackTrace": [],
+    "rawText": "* Try:\n\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "260e88a9-bf95-4e61-b2b3-92c12856a9f0",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "COMPILATION",
+    "errorMessage": "Check your code and dependencies to fix the compilation error(s)",
+    "summary": "Check your code and dependencies to fix the compilation error(s)",
+    "stackTrace": [],
+    "rawText": "Check your code and dependencies to fix the compilation error(s)\n\u003e",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "5ea59607-c088-4067-bddf-b349ac0586b9",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:51:28",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Run with --scan to get full insights.",
+    "summary": "Run with --scan to get full insights.",
+    "stackTrace": [],
+    "rawText": "Run with --scan to get full insights.\n\nBUILD FAILED",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "560ff25f-af7c-4dd4-9a1c-ce4f9f62d0ac",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:55:21",
+    "errorType": "NETWORK",
+    "errorMessage": "Tomcat initialized with port 8080 (http)",
+    "summary": "Tomcat initialized with port 8080 (http)",
+    "stackTrace": [],
+    "rawText": "Tomcat initialized with port 8080 (http)\norg.hibernate.Version",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "850bc7b0-a8bd-4389-b199-f7736db55881",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:55:22",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63d945c2",
+    "summary": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63d945c2",
+    "stackTrace": [],
+    "rawText": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63d945c2\norg.hibernate.orm.deprecation",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "e64f2c52-4a83-41e1-9265-6339fcc30118",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:55:25",
+    "errorType": "DATABASE",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [],
+    "rawText": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolver ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice\n Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "9b8eac9c-1433-4b19-a6a0-fb75c4075cd3",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:55:25",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.",
+    "summary": "Error starting ApplicationContext. To display the condition evaluation report re-run your applica...",
+    "stackTrace": [],
+    "rawText": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.\nERROR",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "695dc7d4-fc89-479f-b137-1ef0d06a7379",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:55:25",
+    "errorType": "DATABASE",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiate",
+        "location": "ConstructorResolver.java:657",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+        "methodName": "instantiateUsingFactoryMethod",
+        "location": "AbstractAutowireCapableBeanFactory.java:1375",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiateUsingFactoryMethod",
+        "location": "ConstructorResolver.java:489",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+        "methodName": "createBeanInstance",
+        "location": "AbstractAutowireCapableBeanFactory.java:1205",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+        "methodName": "doCreateBean",
+        "location": "AbstractAutowireCapableBeanFactory.java:569",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+        "methodName": "createBean",
+        "location": "AbstractAutowireCapableBeanFactory.java:529",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractBeanFactory",
+        "methodName": "lambda$doGetBean$0",
+        "location": "AbstractBeanFactory.java:339",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.DefaultSingletonBeanRegistry",
+        "methodName": "getSingleton",
+        "location": "DefaultSingletonBeanRegistry.java:373",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractBeanFactory",
+        "methodName": "doGetBean",
+        "location": "AbstractBeanFactory.java:337",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.AbstractBeanFactory",
+        "methodName": "getBean",
+        "location": "AbstractBeanFactory.java:202",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.DefaultListableBeanFactory",
+        "methodName": "preInstantiateSingleton",
+        "location": "DefaultListableBeanFactory.java:1188",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.DefaultListableBeanFactory",
+        "methodName": "preInstantiateSingletons",
+        "location": "DefaultListableBeanFactory.java:1123",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.context.support.AbstractApplicationContext",
+        "methodName": "refresh",
+        "location": "AbstractApplicationContext.java:627",
+        "jarFile": "spring-context-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.DefaultListableBeanFactory",
+        "methodName": "instantiateSingleton",
+        "location": "DefaultListableBeanFactory.java:1222",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.context.support.AbstractApplicationContext",
+        "methodName": "finishBeanFactoryInitialization",
+        "location": "AbstractApplicationContext.java:987",
+        "jarFile": "spring-context-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+        "methodName": "refresh",
+        "location": "ServletWebServerApplicationContext.java:146",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.boot.SpringApplication",
+        "methodName": "refresh",
+        "location": "SpringApplication.java:752",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.boot.SpringApplication",
+        "methodName": "refreshContext",
+        "location": "SpringApplication.java:439",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.boot.SpringApplication",
+        "methodName": "run",
+        "location": "SpringApplication.java:318",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.boot.SpringApplication",
+        "methodName": "run",
+        "location": "SpringApplication.java:1350",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.boot.SpringApplication",
+        "methodName": "run",
+        "location": "SpringApplication.java:1361",
+        "jarFile": "spring-boot-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "com.ikuzo.tabilog.TabilogApplication",
+        "methodName": "main",
+        "location": "TabilogApplication.java:10",
+        "jarFile": "main/:na"
+      },
+      {
+        "className": "org.springframework.boot.devtools.restart.RestartLauncher",
+        "methodName": "run",
+        "location": "RestartLauncher.java:50",
+        "jarFile": "spring-boot-devtools-3.5.5.jar:3.5.5"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+        "methodName": "lambda$instantiate$0",
+        "location": "SimpleInstantiationStrategy.java:200",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+        "methodName": "instantiateWithFactoryMethod",
+        "location": "SimpleInstantiationStrategy.java:89",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiate",
+        "location": "ConstructorResolver.java:653",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+        "methodName": "instantiate",
+        "location": "SimpleInstantiationStrategy.java:169",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.core.io.UrlResource",
+        "methodName": "getInputStream",
+        "location": "UrlResource.java:250",
+        "jarFile": "spring-core-6.2.10.jar:6.2.10"
+      }
+    ],
+    "rawText": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:489) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.10.jar:6.2.10]\n\tat org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.5.jar:3.5.5]\n\tat com.ikuzo.tabilog.TabilogApplication.main(TabilogApplication.java:10) ~[main/:na]\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]\n\tat org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.5.jar:3.5.5]\nCaused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)\n\tat org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:200) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiateWithFactoryMethod(SimpleInstantiationStrategy.java:89) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-6.2.10.jar:6.2.10]\nCaused by: java.io.FileNotFoundException: /C:/cloud-key/google-cloud-key.json (No such file or directory)\n\tat org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:169) ~[spring-beans-6.2.10.jar:6.2.10]\n\tat java.base/java.io.FileInputStream.open(FileInputStream.java:213) ~[na:na]\n\tat java.base/java.io.FileInputStream.\u003cinit\u003e(FileInputStream.java:106) ~[na:na]\n\tat java.base/java.io.FileInputStream.open0(Native Method) ~[na:na]\n\tat java.base/java.io.FileInputStream.\u003cinit\u003e(FileInputStream.java:152) ~[na:na]\n\tat java.base/sun.net.www.protocol.file.FileURLConnection.connect(FileURLConnection.java:84) ~[na:na]\n\tat org.springframework.core.io.UrlResource.getInputStream(UrlResource.java:250) ~[spring-core-6.2.10.jar:6.2.10]\n\tat com..base/sun.net.www.protocol.file.FileURLConnection.getInputStream(FileURLConnection.java:180) ~[na:na]",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "bcdc5266-f3a3-4c61-a112-1682d7392c29",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:59:38",
+    "errorType": "NETWORK",
+    "errorMessage": "Tomcat initialized with port 8080 (http)",
+    "summary": "Tomcat initialized with port 8080 (http)",
+    "stackTrace": [],
+    "rawText": "Tomcat initialized with port 8080 (http)\norg.hibernate.Version",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "6bea21b5-46e6-4976-bdcc-688d916677de",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:59:38",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5ae685ca",
+    "summary": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5ae685ca",
+    "stackTrace": [],
+    "rawText": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5ae685ca\norg.hibernate.orm.deprecation",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "16162b16-044e-4a63-a952-bf8aa1088075",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:59:41",
+    "errorType": "DATABASE",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [],
+    "rawText": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolver ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice\n Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "37161f72-486a-4eb6-b960-89f770c11d07",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 09:59:41",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.",
+    "summary": "Error starting ApplicationContext. To display the condition evaluation report re-run your applica...",
+    "stackTrace": [],
+    "rawText": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.\nERROR",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "0d1b3414-9faa-42a0-b247-3cc02e1a88a7",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "errorMessage": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:59: error: constructor JwtResponse in class JwtResponse cannot be applied to given types;",
+    "summary": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthCon...",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:59: error: constructor JwtResponse in class JwtResponse cannot be applied to given types;\n        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "74d17887-fc5e-45a2-9a03-5b83e10957ce",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "2cd5ebe1-fb0d-42ae-8d21-53dd4bbbc2f2",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "errorMessage": "required: String,String,String,String,String,long",
+    "summary": "required: String,String,String,String,String,long",
+    "stackTrace": [],
+    "rawText": "required: String,String,String,String,String,long\n  found:    String,String,String,String,String",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "126c2004-3043-4fc5-bf7e-2dca203f54fa",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "reason: actual and formal argument lists differ in length",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "5347ee95-d94d-4b7d-a948-f5458bdc9bc6",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "1 error",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "88329144-2887-4d05-906d-ed528a7cef08",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "FAILURE:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "abe5e3b0-b28d-4831-b151-e3292f05a341",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Build failed with an exception.",
+    "summary": "Build failed with an exception.",
+    "stackTrace": [],
+    "rawText": "Build failed with an exception.\n\n* What went wrong:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "46e814c3-c157-4731-a8ff-8070d02c7dee",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "Execution failed for task \u0027:compileJava\u0027.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "148c2cf5-fed4-4afb-8aa6-cfee102b5459",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "COMPILATION",
+    "errorMessage": "\u003e",
+    "summary": "\u003e",
+    "stackTrace": [],
+    "rawText": "\u003e \nCompilation failed; see the compiler output below.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "b329f4a2-2dfd-4909-beaa-2f5254a099db",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "errorMessage": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:59: error: constructor JwtResponse in class JwtResponse cannot be applied to given types;",
+    "summary": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthCon...",
+    "stackTrace": [],
+    "rawText": "/Users/s/Desktop/tabilog/tabiLog_backend-main/src/main/java/com/ikuzo/tabilog/domain/auth/AuthController.java:59: error: constructor JwtResponse in class JwtResponse cannot be applied to given types;\n          return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "39f1f099-e750-4d6f-850a-ffcfac958ef9",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "^",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "46fdd50c-88e3-443b-a8db-5b0652d39ee2",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "required: String,String,String,String,String,long",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "8f352402-1586-4f4f-aa75-8db20248d477",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "found:    String,String,String,String,String",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "e59b7bb8-a249-4815-96ea-2c186847cf6e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "reason: actual and formal argument lists differ in length",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1aed04e0-0163-43fc-a4aa-4274d0d9ec46",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "1 error",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "3a0ef3f4-5d19-4f2f-ac9e-cdd8faae49f8",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "summary": "未知错误",
+    "stackTrace": [],
+    "rawText": "* Try:",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1c567906-cb43-4652-8d89-14bb29ce4b3f",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "COMPILATION",
+    "errorMessage": "Check your code and dependencies to fix the compilation error(s)\u003e",
+    "summary": "Check your code and dependencies to fix the compilation error(s)\u003e",
+    "stackTrace": [],
+    "rawText": "Check your code and dependencies to fix the compilation error(s)\u003e \nRun with",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "2c0d871c-f2e8-43a7-a446-08fb5ac6a818",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:02:17",
+    "errorType": "UNKNOWN",
+    "errorMessage": "\u003e --scan to get full insights.",
+    "summary": "\u003e --scan to get full insights.",
+    "stackTrace": [],
+    "rawText": "\u003e --scan to get full insights.\n\nBUILD FAILED",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "f93daabc-3ff1-4b48-8f59-1240f810d3bf",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:08:52",
+    "errorType": "NETWORK",
+    "errorMessage": "Tomcat initialized with port 8080 (http)",
+    "summary": "Tomcat initialized with port 8080 (http)",
+    "stackTrace": [],
+    "rawText": "Tomcat initialized with port 8080 (http)\norg.hibernate.Version",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "fe66d01a-14cc-4556-bfc6-a5cb8e0ce544",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:08:52",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37ba7140",
+    "summary": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37ba7140",
+    "stackTrace": [],
+    "rawText": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37ba7140\norg.hibernate.orm.deprecation",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "1dd10d29-cb87-4be3-8847-6eaebfc54285",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:08:55",
+    "errorType": "DATABASE",
+    "errorMessage": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolverdler, 1 ResponseBodyAdvice",
+    "summary": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolverdler, 1 ResponseB...",
+    "stackTrace": [],
+    "rawText": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolverdler, 1 ResponseBodyAdvice",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "24a3a8de-a10c-43ee-a7c3-e92aec97e26e",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:08:55",
+    "errorType": "SPRING_FRAMEWORK",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [],
+    "rawText": "Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)\nError starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "8e8c0cb5-4297-4b37-bbfd-b6fd19d50eb8",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 10:08:55",
+    "errorType": "SPRING_FRAMEWORK",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiate",
+        "location": "ConstructorResolver.java:657",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      },
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiateUsingFactoryMethod",
+        "location": "ConstructorResolver.java:489",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      }
+    ],
+    "rawText": "ERROR\tat org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657) ~[spring-beans-6.2.10.jar:6.2.10]\norg.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)\n\tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:489) ~[spring-beans-6.2.10.jar:6.2.10]",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "00304d8d-51d0-4c18-8fad-ac90fb9b4361",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 11:26:42",
+    "errorType": "NETWORK",
+    "errorMessage": "Tomcat initialized with port 8080 (http)",
+    "summary": "Tomcat initialized with port 8080 (http)",
+    "stackTrace": [],
+    "rawText": "Tomcat initialized with port 8080 (http)\norg.hibernate.Version",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "dc3705be-f4ea-4cf6-8f8d-21dd6cdc25b0",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 11:26:43",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5f77332c",
+    "summary": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5f77332c",
+    "stackTrace": [],
+    "rawText": "HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5f77332c\norg.hibernate.orm.deprecation",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "a03ac9df-75ca-492f-a2a0-96afd52ec886",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 11:26:48",
+    "errorType": "DATABASE",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [],
+    "rawText": "org.hibernate.orm.connections.pooling   .m.m.a.ExceptionHandlerExceptionResolver ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice\n Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "a72f9dc2-b117-45a6-b844-f86bbae9c142",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 11:26:48",
+    "errorType": "UNKNOWN",
+    "errorMessage": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.",
+    "summary": "Error starting ApplicationContext. To display the condition evaluation report re-run your applica...",
+    "stackTrace": [],
+    "rawText": "Error starting ApplicationContext. To display the condition evaluation report re-run your application with \u0027debug\u0027 enabled.\nERROR",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "59740239-1e07-4da3-9de1-6123b87d83ee",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 11:26:48",
+    "errorType": "SPRING_FRAMEWORK",
+    "exceptionClass": "org.springframework.beans.factory.BeanCreationException",
+    "errorMessage": "Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)",
+    "summary": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/clou...",
+    "stackTrace": [
+      {
+        "className": "org.springframework.beans.factory.support.ConstructorResolver",
+        "methodName": "instantiateUsingFactoryMethod",
+        "location": "ConstructorResolver.java:489",
+        "jarFile": "spring-beans-6.2.10.jar:6.2.10"
+      }
+    ],
+    "rawText": "org.springframework.beans.factory.BeanCreationException: Error creating bean with name \u0027googleCredentials\u0027 defined in class path resource [com/google/cloud/spring/autoconfigure/core/GcpContextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw exception with message: /C:/cloud-key/google-cloud-key.json (No such file or directory)\nontextAutoConfiguration.class]: Failed to instantiate [com.google.api.gax.core.CredentialsProvider]: Factory method \u0027googleCredentials\u0027 threw \tat org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:489) ~[spring-beans-6.2.10.jar:6.2.10]",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "dd0d9498-db90-40f2-852a-85df35ef56ea",
+    "project": "Tabilog",
+    "timestamp": "2025-09-16 13:18:04",
+    "errorType": "SPRING_FRAMEWORK",
+    "exceptionClass": "org.springframework.beans.factory.BeanDefinitionStoreException",
+    "errorMessage": "Failed to parse configuration class [com.ikuzo.tabilog.TabilogApplication]",
+    "summary": "org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.ikuzo.tabilog.TabilogApplication]",
+    "stackTrace": [],
+    "rawText": "Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.ikuzo.tabilog.TabilogApplication]\nERROR",
+    "resolved": false,
+    "status": "PENDING"
+  }
+]

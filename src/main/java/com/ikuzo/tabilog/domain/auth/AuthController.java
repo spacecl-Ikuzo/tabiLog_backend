@@ -19,6 +19,7 @@ import com.ikuzo.tabilog.security.jwt.JwtUtils;
 import com.ikuzo.tabilog.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,41 +40,67 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
 
+    // ★ 추가: 액세스 토큰 만료(ms)
+    @Value("${tabilog.app.jwtAccessExpirationMs}")
+    private long jwtAccessExpirationMs;
+
+    /**
+     * 로그인
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        // 사용자 인증 수행
+        // 1) 인증 수행
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getId(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getId(), loginRequest.getPassword())
+        );
 
-        // SecurityContext에 인증 정보 저장
+        // 2) SecurityContext 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
-        // JWT Access Token 생성
+
+        // 3) Access Token 생성
         String accessToken = jwtUtils.generateJwtToken(authentication);
-        
+
+        // 4) 사용자 정보
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        
-        // Refresh Token 생성
+
+        // 5) Refresh Token 생성
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));
+        // 6) 만료 시각(epoch millis) 계산
+        long expiresAt = System.currentTimeMillis() + jwtAccessExpirationMs;
+
+        // 7) 응답
+        return ResponseEntity.ok(new JwtResponse(
+                accessToken,
+                refreshToken.getToken(),
+                userDetails.getUsername(),  // 기존 로직대로 email(또는 username) 사용
+                userDetails.getUserId(),
+                userDetails.getNickname(),
+                expiresAt                   // ★ 추가됨
+        ));
     }
 
+    /**
+     * 회원가입
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signUpRequest) {
         User newUser = userService.register(signUpRequest);
-        
+
         SignupResponse response = new SignupResponse(
-            "회원가입이 성공적으로 완료되었습니다.",
-            newUser.getEmail(),
-            newUser.getNickname(),
-            newUser.getPrivacyAgreement(),
-            newUser.getPublicAgreement()
+                "회원가입이 성공적으로 완료되었습니다.",
+                newUser.getEmail(),
+                newUser.getNickname(),
+                newUser.getPrivacyAgreement(),
+                newUser.getPublicAgreement()
         );
-        
+
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 리프레시 토큰으로 액세스 토큰 재발급
+     */
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
@@ -83,6 +110,7 @@ public class AuthController {
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String token = jwtUtils.generateJwtTokenFromEmail(user.getEmail());
+                    // (선택) 여기서도 expiresAt을 내려주고 싶다면 TokenRefreshResponse에 필드 추가 필요
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
@@ -107,4 +135,3 @@ public class AuthController {
         return ResponseEntity.ok(new FindPasswordResponse());
     }
 }
-

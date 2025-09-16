@@ -12,57 +12,63 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "user") // DBML의 'User' 테이블과 매핑됩니다.
+@Table(
+        name = "user", // 기존 테이블명 유지
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_user_userid", columnNames = "user_id"),
+                @UniqueConstraint(name = "uk_user_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_user_nickname", columnNames = "nickname")
+        }
+)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA는 기본 생성자를 필요로 합니다.
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    // ⚠️ column 이름을 명시해서 위 uniqueConstraints와 정확히 매칭되게 함
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String userId; // 사용자가 로그인할 때 사용하는 ID
+    // 로그인 ID
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String firstName;
-    
+
     @Column(nullable = false)
     private String lastName;
 
     private String gender;
     private String phoneNumber;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
-    
+
     @Column(nullable = false)
     private Boolean privacyAgreement; // 개인정보동의서 (필수)
-    
-    private Boolean publicAgreement; // 공개동의서 (선택)
-    
-    // DBML 스키마에 따라 나머지 필드들도 추가합니다...
-    // private String profileImageOriginalKey;
-    // private String profileImageThumbKey;
 
-    @CreationTimestamp // 엔티티가 생성될 때 자동으로 시간이 기록됩니다.
+    private Boolean publicAgreement; // 공개동의서 (선택)
+
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp // 엔티티가 수정될 때 자동으로 시간이 기록됩니다.
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // PlanMember 관계 (User가 참여하는 Plan들)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<com.ikuzo.tabilog.domain.plan.PlanMember> planMembers = new ArrayList<>();
 
     @Builder
-    public User(String email, String userId, String password, String firstName, String lastName, String gender, String phoneNumber, String nickname, Boolean privacyAgreement, Boolean publicAgreement) {
+    public User(String email, String userId, String password, String firstName, String lastName,
+                String gender, String phoneNumber, String nickname,
+                Boolean privacyAgreement, Boolean publicAgreement) {
         this.email = email;
         this.userId = userId;
         this.password = password;
@@ -77,12 +83,8 @@ public class User {
 
     //== 비즈니스 로직 ==//
     public void updateProfile(String nickname, String phoneNumber) {
-        if (nickname != null) {
-            this.nickname = nickname;
-        }
-        if (phoneNumber != null) {
-            this.phoneNumber = phoneNumber;
-        }
+        if (nickname != null) this.nickname = nickname;
+        if (phoneNumber != null) this.phoneNumber = phoneNumber;
     }
 
     public void updatePassword(String newPassword) {

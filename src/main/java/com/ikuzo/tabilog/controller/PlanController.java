@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/plans")
 @RequiredArgsConstructor
-public class PlanController {
+public class PlanController extends BaseController {
 
     private final PlanService planService;
 
@@ -25,7 +25,7 @@ public class PlanController {
             @Valid @RequestBody PlanRequest request,
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         PlanResponse response = planService.createPlan(request, userId);
         
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -37,7 +37,7 @@ public class PlanController {
             @PathVariable Long planId,
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         PlanResponse response = planService.getPlan(planId, userId);
         
         return ResponseEntity.ok(ApiResponse.success(response));
@@ -47,7 +47,7 @@ public class PlanController {
     public ResponseEntity<ApiResponse<List<PlanResponse>>> getUserPlans(
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         List<PlanResponse> responses = planService.getUserPlans(userId);
         
         return ResponseEntity.ok(ApiResponse.success(responses));
@@ -57,7 +57,7 @@ public class PlanController {
     public ResponseEntity<ApiResponse<List<PlanResponse>>> getActivePlans(
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         List<PlanResponse> responses = planService.getActivePlans(userId);
         
         return ResponseEntity.ok(ApiResponse.success(responses));
@@ -67,7 +67,7 @@ public class PlanController {
     public ResponseEntity<ApiResponse<List<PlanResponse>>> getUpcomingPlans(
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         List<PlanResponse> responses = planService.getUpcomingPlans(userId);
         
         return ResponseEntity.ok(ApiResponse.success(responses));
@@ -77,7 +77,7 @@ public class PlanController {
     public ResponseEntity<ApiResponse<List<PlanResponse>>> getCompletedPlans(
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         List<PlanResponse> responses = planService.getCompletedPlans(userId);
         
         return ResponseEntity.ok(ApiResponse.success(responses));
@@ -89,7 +89,7 @@ public class PlanController {
             @Valid @RequestBody PlanRequest request,
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         PlanResponse response = planService.updatePlan(planId, request, userId);
         
         return ResponseEntity.ok(ApiResponse.success("여행 계획이 수정되었습니다.", response));
@@ -100,7 +100,7 @@ public class PlanController {
             @PathVariable Long planId,
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         planService.deletePlan(planId, userId);
         
         return ResponseEntity.ok(ApiResponse.success("여행 계획이 삭제되었습니다.", null));
@@ -113,7 +113,7 @@ public class PlanController {
             @RequestParam(required = false) String status,
             Authentication authentication) {
         
-        Long userId = getUserIdFromAuthentication(authentication);
+        Long userId = getCurrentUserId(authentication);
         
         // prefectures 파라미터 처리 (comma-separated)
         List<String> prefectureList = null;
@@ -157,8 +157,4 @@ public class PlanController {
         return ResponseEntity.ok(ApiResponse.success(message, responses));
     }
 
-    private Long getUserIdFromAuthentication(Authentication authentication) {
-        // TODO: 실제 인증 정보에서 사용자 ID 추출
-        return 1L; // 임시 값
-    }
 }

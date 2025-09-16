@@ -18,9 +18,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // user_id로만 사용자 찾기
-        User user = userRepository.findByUserId(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with user_id: " + username));
+        // 이메일 또는 user_id로 사용자 찾기 (JWT에서는 이메일을 사용하므로)
+        User user = userRepository.findByEmail(username)
+                .or(() -> userRepository.findByUserId(username))
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
         return UserDetailsImpl.build(user);
     }

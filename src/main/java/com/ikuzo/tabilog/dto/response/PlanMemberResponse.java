@@ -14,6 +14,7 @@ public class PlanMemberResponse {
 
     private Long id;
     private Long userId;
+    private String userIdString; // 사용자의 userId (String)
     private String userNickname;
     private String userEmail;
     private PlanMemberRole role;

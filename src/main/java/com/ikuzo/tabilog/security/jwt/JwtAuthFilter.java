@@ -1,115 +1,89 @@
 package com.ikuzo.tabilog.security.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ikuzo.tabilog.security.services.UserDetailsServiceImpl;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
- * Authorization: Bearer <JWT> 를 검사하여 인증 컨텍스트를 채우는 필터.
- * - 토큰 만료: 401 + { error: "TOKEN_EXPIRED" }
- * - 기타 인증 오류: 401 + { error: "AUTH_ERROR" }
- * - 인증 불필요한 경로는 스킵( /api/auth/**, /error, /actuator 등 )
- * - CORS preflight(OPTIONS)는 스킵
+ * JWT 인증 필터
+ * - Authorization: Bearer <token> 헤더에서 토큰 추출
+ * - 토큰 유효성 검사 후 SecurityContext에 Authentication 설정
+ * - /api/auth/**, /h2-console/** 등은 필터 제외
  */
 @Component
-@RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
 
     private final JwtUtils jwtUtils;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final ObjectMapper om = new ObjectMapper();
+    private final UserDetailsService userDetailsService;
+
+    public JwtAuthFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        String path = request.getServletPath();
+        // 인증이 필요 없는 경로 (회원가입/로그인, H2 콘솔 등)
+        return path.startsWith("/api/auth/")
+                || path.startsWith("/h2-console")
+                || path.startsWith("/actuator")
+                || path.startsWith("/swagger")
+                || path.startsWith("/v3/api-docs")
+                || "OPTIONS".equalsIgnoreCase(request.getMethod()); // CORS preflight
+    }
 
-        final String uri = request.getRequestURI();
-        final String method = request.getMethod();
-
-        // 1) 인증 불필요한 경로 or Preflight 는 필터 스킵
-        if ("OPTIONS".equalsIgnoreCase(method) || shouldSkipFilter(uri)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            // 2) Authorization 헤더에서 Bearer 토큰 파싱
-            String jwt = parseJwt(request);
+            String header = request.getHeader("Authorization");
+            String token = null;
 
-            if (StringUtils.hasText(jwt) && jwtUtils.validateJwtToken(jwt)) {
-                // 3) 토큰에서 username 추출 후 인증 컨텍스트 설정
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-                var authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (header != null && header.startsWith("Bearer ")) {
+                token = header.substring(7);
             }
 
-            // 4) 체인의 다음 필터로 진행
-            filterChain.doFilter(request, response);
+            // 이미 인증되어 있지 않고, 토큰이 존재하면 처리
+            if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (jwtUtils.validateJwtToken(token)) {
+                    String username = jwtUtils.getUserNameFromJwtToken(token); // 서버 쪽 규격: userId(아이디) 기반
+                    if (username != null && !username.isBlank()) {
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        } catch (ExpiredJwtException e) {
-            // 만료 토큰
-            log.warn("[JWT] expired: {}", e.getMessage());
-            writeJsonError(response, 401, "TOKEN_EXPIRED", "로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(
+                                        userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(
+                                new WebAuthenticationDetailsSource().buildDetails(request));
 
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                } else {
+                    log.debug("JWT 토큰 유효성 검증 실패");
+                }
+            }
         } catch (Exception e) {
-            // 기타 인증 오류
-            log.error("[JWT] auth error", e);
-            writeJsonError(response, 401, "AUTH_ERROR", "인증 오류가 발생했습니다.");
+            // 필터에서 예외를 터뜨리지 않고 다음 체인으로 넘겨서 일관된 예외 처리에 맡김
+            log.error("JWT 인증 필터 처리 중 예외 발생: {}", e.getMessage());
         }
-    }
 
-    /** 인증 불필요 경로(permitAll)만 스킵. 절대 /api 전체를 스킵하지 말 것! */
-    private boolean shouldSkipFilter(String requestURI) {
-        // auth 엔드포인트(로그인/회원가입/토큰)와 오류/헬스체크/문서 경로 등
-        return requestURI.startsWith("/api/auth")
-                || requestURI.startsWith("/error")
-                || requestURI.startsWith("/actuator")
-                || requestURI.startsWith("/v3/api-docs")
-                || requestURI.startsWith("/swagger-ui");
-    }
-
-    /** Authorization 헤더에서 Bearer 토큰 추출 */
-    private String parseJwt(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        return null;
-    }
-
-    /** 에러 응답을 JSON으로 통일 출력 */
-    private void writeJsonError(HttpServletResponse res, int status, String code, String message) throws IOException {
-        if (res.isCommitted()) return;
-        res.setStatus(status);
-        res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        om.writeValue(res.getOutputStream(), Map.of(
-                "status", status,
-                "error", code,
-                "message", message
-        ));
+        filterChain.doFilter(request, response);
     }
 }

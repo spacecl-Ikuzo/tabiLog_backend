@@ -3,6 +3,7 @@ package com.ikuzo.tabilog.domain.user;
 import com.ikuzo.tabilog.dto.request.UserSignupRequest;
 import com.ikuzo.tabilog.dto.request.UserProfileUpdateRequest;
 import com.ikuzo.tabilog.dto.request.UserPasswordChangeRequest;
+import com.ikuzo.tabilog.dto.response.MyPageResponse;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -149,5 +150,27 @@ public class UserService {
         
         // TODO: 비밀번호 재설정 이메일 발송 로직 구현
         // 현재는 사용자 확인만 수행
+    }
+
+    /**
+     * 마이페이지 정보 조회
+     */
+    public MyPageResponse getMyPageInfo(Long userId) {
+        User user = getUserById(userId);
+        
+        return new MyPageResponse(
+            user.getId(),
+            user.getEmail(),
+            user.getUserId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getGender(),
+            user.getPhoneNumber(),
+            user.getNickname(),
+            user.getCreatedAt(),
+            user.getUpdatedAt(),
+            user.getParticipatingPlans().size(),
+            user.getOwnedPlans().size()
+        );
     }
 }

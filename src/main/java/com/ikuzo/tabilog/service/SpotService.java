@@ -4,7 +4,6 @@ import com.ikuzo.tabilog.domain.plan.DailyPlan;
 import com.ikuzo.tabilog.domain.plan.DailyPlanRepository;
 import com.ikuzo.tabilog.domain.spot.Spot;
 import com.ikuzo.tabilog.domain.spot.SpotRepository;
-import com.ikuzo.tabilog.domain.spot.TravelSegment;
 import com.ikuzo.tabilog.domain.spot.TravelSegmentRepository;
 import com.ikuzo.tabilog.dto.request.SpotRequest;
 import com.ikuzo.tabilog.dto.response.SpotResponse;
@@ -27,9 +26,14 @@ public class SpotService {
     private final TravelSegmentRepository travelSegmentRepository;
 
     @Transactional
-    public SpotResponse addSpotToDailyPlan(Long dailyPlanId, SpotRequest request) {
+    public SpotResponse addSpotToDailyPlan(Long dailyPlanId, SpotRequest request, Long userId) {
         DailyPlan dailyPlan = dailyPlanRepository.findById(dailyPlanId)
                 .orElseThrow(() -> new DailyPlanNotFoundException(dailyPlanId));
+        
+        // DailyPlan의 소유자 확인
+        if (!dailyPlan.getPlan().getUser().getId().equals(userId)) {
+            throw new RuntimeException("이 DailyPlan에 접근할 권한이 없습니다.");
+        }
 
         // 방문 순서가 중복되지 않도록 조정
         Integer adjustedOrder = adjustVisitOrder(dailyPlanId, request.getVisitOrder());
@@ -58,7 +62,25 @@ public class SpotService {
         return convertToResponse(spot);
     }
 
-    public List<SpotResponse> getSpotsByDailyPlan(Long dailyPlanId) {
+    public List<SpotResponse> getSpotsByDailyPlan(Long dailyPlanId, Long userId) {
+        DailyPlan dailyPlan = dailyPlanRepository.findById(dailyPlanId)
+                .orElseThrow(() -> new DailyPlanNotFoundException(dailyPlanId));
+        
+        // 접근 권한 확인
+        boolean hasAccess = false;
+        
+        if (userId != null) {
+            // 인증된 사용자인 경우: 자신의 데이터이거나 공개된 데이터
+            hasAccess = dailyPlan.getPlan().getUser().getId().equals(userId) || dailyPlan.getPlan().isPublic();
+        } else {
+            // 인증되지 않은 사용자인 경우: 공개된 데이터만
+            hasAccess = dailyPlan.getPlan().isPublic();
+        }
+        
+        if (!hasAccess) {
+            throw new RuntimeException("이 DailyPlan에 접근할 권한이 없습니다.");
+        }
+        
         List<Spot> spots = spotRepository.findAllByDailyPlanIdOrderByVisitOrderAsc(dailyPlanId);
         return spots.stream()
                 .map(this::convertToResponse)
@@ -91,9 +113,14 @@ public class SpotService {
     }
 
     @Transactional
-    public void deleteSpot(Long spotId) {
+    public void deleteSpot(Long spotId, Long userId) {
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotNotFoundException(spotId));
+
+        // Spot의 소유자 확인 (DailyPlan → Plan → User)
+        if (!spot.getDailyPlan().getPlan().getUser().getId().equals(userId)) {
+            throw new RuntimeException("이 Spot에 접근할 권한이 없습니다.");
+        }
 
         Long dailyPlanId = spot.getDailyPlan().getId();
         spotRepository.delete(spot);

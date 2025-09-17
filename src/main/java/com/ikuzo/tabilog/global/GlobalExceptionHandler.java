@@ -3,6 +3,7 @@ package com.ikuzo.tabilog.global;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -108,6 +109,35 @@ public class GlobalExceptionHandler {
             LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        // DB에서 던져주는 실제 에러 메시지 (제약명 포함)
+        String rootMsg = ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : "";
+
+        Map<String, String> details = new HashMap<>();
+
+        // 📌 제약명으로 어떤 컬럼이 중복됐는지 구분
+        //   → 사용자에게는 일본어 메시지를 반환
+        if (rootMsg.contains("uk_user_userid")) {
+            details.put("userId", "すでに使用されているIDです。"); // 사용자: 일본어 / 개발자 주석: 아이디 중복
+        }
+        if (rootMsg.contains("uk_user_email")) {
+            details.put("email", "すでに使用されているメールアドレスです。"); // 이메일 중복
+        }
+        if (rootMsg.contains("uk_user_nickname")) {
+            details.put("nickname", "すでに使用されているニックネームです。"); // 닉네임 중복
+        }
+
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            "DUPLICATE",
+            "重複のため登録できませんでした。", // 전체 메시지 (사용자에게 보임, 일본어)
+            LocalDateTime.now(),
+            details
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(Exception.class)

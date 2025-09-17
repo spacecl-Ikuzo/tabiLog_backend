@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface DailyPlanRepository extends JpaRepository<DailyPlan, Long> {
     List<DailyPlan> findAllByPlanIdOrderByVisitDateAsc(Long planId);
     Optional<DailyPlan> findByPlanIdAndVisitDate(Long planId, LocalDate visitDate);
+    List<DailyPlan> findByPlanAndVisitDate(Plan plan, LocalDate visitDate);
 }

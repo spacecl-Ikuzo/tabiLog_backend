@@ -28,6 +28,8 @@ public class PlanResponse {
     private Long userId;
     private List<DailyPlanResponse> dailyPlans;
     private List<PlanMemberResponse> members;
+    private List<ExpenseResponse> expenses;
+    private Long totalExpenseAmount; // 총 지출 금액
     private boolean isPublic;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

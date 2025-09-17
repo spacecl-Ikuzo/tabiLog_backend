@@ -1,6 +1,7 @@
 package com.ikuzo.tabilog.domain.plan;
 
 import com.ikuzo.tabilog.domain.user.User;
+import com.ikuzo.tabilog.domain.expense.Expense;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,6 +65,10 @@ public class Plan {
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanMember> planMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("expenseDate ASC")
+    private List<Expense> expenses = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -148,5 +153,21 @@ public class Plan {
                 .filter(member -> member.getRole() == role)
                 .map(PlanMember::getUser)
                 .toList();
+    }
+
+    // Expense 관련 메서드
+    public void addExpense(Expense expense) {
+        this.expenses.add(expense);
+    }
+
+    public void removeExpense(Expense expense) {
+        this.expenses.remove(expense);
+    }
+
+    // 총 지출 금액 계산
+    public Long getTotalExpenseAmount() {
+        return this.expenses.stream()
+                .mapToLong(expense -> expense.getAmount().longValue())
+                .sum();
     }
 }

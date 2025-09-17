@@ -12,13 +12,19 @@ import com.ikuzo.tabilog.domain.user.UserRepository;
 import com.ikuzo.tabilog.dto.request.DailyPlanRequest;
 import com.ikuzo.tabilog.dto.request.PlanRequest;
 import com.ikuzo.tabilog.dto.response.DailyPlanResponse;
+import com.ikuzo.tabilog.dto.response.ExpenseResponse;
 import com.ikuzo.tabilog.dto.response.PlanMemberResponse;
 import com.ikuzo.tabilog.dto.response.PlanResponse;
+import com.ikuzo.tabilog.dto.response.SpotResponse;
+import com.ikuzo.tabilog.dto.response.TravelSegmentResponse;
 import com.ikuzo.tabilog.exception.PlanNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,9 @@ public class PlanService {
     private final DailyPlanRepository dailyPlanRepository;
     private final PlanMemberRepository planMemberRepository;
     private final UserRepository userRepository;
+    private final SpotService spotService;
+    private final TravelSegmentService travelSegmentService;
+    private final ExpenseService expenseService;
 
     @Transactional
     public PlanResponse createPlan(PlanRequest request, Long userId) {
@@ -64,7 +73,8 @@ public class PlanService {
         planMemberRepository.save(ownerMember);
 
         // 일별 계획 생성
-        if (request.getDailyPlans() != null) {
+        if (request.getDailyPlans() != null && !request.getDailyPlans().isEmpty()) {
+            // 요청에 DailyPlan이 있는 경우
             for (DailyPlanRequest dailyPlanRequest : request.getDailyPlans()) {
                 DailyPlan dailyPlan = DailyPlan.builder()
                         .plan(savedPlan)
@@ -72,6 +82,20 @@ public class PlanService {
                         .departureTime(dailyPlanRequest.getDepartureTime())
                         .build();
                 savedPlan.addDailyPlan(dailyPlan);
+            }
+        } else {
+            // 요청에 DailyPlan이 없는 경우, startDate와 endDate를 기반으로 자동 생성
+            LocalDate currentDate = savedPlan.getStartDate();
+            LocalDate endDate = savedPlan.getEndDate();
+            
+            while (!currentDate.isAfter(endDate)) {
+                DailyPlan dailyPlan = DailyPlan.builder()
+                        .plan(savedPlan)
+                        .visitDate(currentDate)
+                        .departureTime(LocalTime.of(9, 0)) // 기본 출발 시간: 09:00
+                        .build();
+                savedPlan.addDailyPlan(dailyPlan);
+                currentDate = currentDate.plusDays(1);
             }
         }
 
@@ -81,6 +105,7 @@ public class PlanService {
     public PlanResponse getPlan(Long planId, Long userId) {
         Plan plan = planRepository.findByIdAndUserId(planId, userId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
+        
         return convertToResponse(plan);
     }
 
@@ -233,7 +258,7 @@ public class PlanService {
 
     private PlanResponse convertToResponse(Plan plan) {
         List<DailyPlanResponse> dailyPlanResponses = plan.getDailyPlans().stream()
-                .map(this::convertToResponse)
+                .map(dailyPlan -> convertToResponse(dailyPlan, plan.getUser().getId()))
                 .collect(Collectors.toList());
 
         List<PlanMemberResponse> memberResponses = plan.getPlanMembers().stream()
@@ -256,6 +281,10 @@ public class PlanService {
             memberResponses.add(0, ownerResponse); // 첫 번째에 추가
         }
 
+        // Expense 데이터 가져오기
+        List<ExpenseResponse> expenseResponses = expenseService.getExpensesByPlan(plan.getId());
+        Long totalExpenseAmount = plan.getTotalExpenseAmount();
+
         return PlanResponse.builder()
                 .id(plan.getId())
                 .title(plan.getTitle())
@@ -270,19 +299,25 @@ public class PlanService {
                 .userId(plan.getUser().getId())
                 .dailyPlans(dailyPlanResponses)
                 .members(memberResponses)
+                .expenses(expenseResponses)
+                .totalExpenseAmount(totalExpenseAmount)
                 .isPublic(plan.isPublic())
                 .createdAt(plan.getCreatedAt())
                 .updatedAt(plan.getUpdatedAt())
                 .build();
     }
 
-    private DailyPlanResponse convertToResponse(DailyPlan dailyPlan) {
+    private DailyPlanResponse convertToResponse(DailyPlan dailyPlan, Long userId) {
+        // 실제 Spot과 TravelSegment 데이터를 가져옴
+        List<SpotResponse> spots = spotService.getSpotsByDailyPlan(dailyPlan.getId(), userId);
+        List<TravelSegmentResponse> travelSegments = travelSegmentService.getTravelSegmentsByDailyPlan(dailyPlan.getId());
+        
         return DailyPlanResponse.builder()
                 .id(dailyPlan.getId())
                 .visitDate(dailyPlan.getVisitDate())
                 .departureTime(dailyPlan.getDepartureTime())
-                .spots(null) // SpotService에서 처리
-                .travelSegments(null) // TravelSegmentService에서 처리
+                .spots(spots)
+                .travelSegments(travelSegments)
                 .createdAt(dailyPlan.getCreatedAt())
                 .updatedAt(dailyPlan.getUpdatedAt())
                 .build();

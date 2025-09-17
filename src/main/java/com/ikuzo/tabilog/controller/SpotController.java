@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/spots")
 @RequiredArgsConstructor
-public class SpotController {
+public class SpotController extends BaseController {
 
     private final SpotService spotService;
     private final GoogleMapsService googleMapsService;
@@ -26,9 +27,11 @@ public class SpotController {
     @PostMapping("/daily-plans/{dailyPlanId}")
     public ResponseEntity<ApiResponse<SpotResponse>> addSpotToDailyPlan(
             @PathVariable Long dailyPlanId,
-            @Valid @RequestBody SpotRequest request) {
+            @Valid @RequestBody SpotRequest request,
+            Authentication authentication) {
         
-        SpotResponse response = spotService.addSpotToDailyPlan(dailyPlanId, request);
+        Long userId = getCurrentUserId(authentication);
+        SpotResponse response = spotService.addSpotToDailyPlan(dailyPlanId, request, userId);
         
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("관광지가 추가되었습니다.", response));
@@ -43,9 +46,11 @@ public class SpotController {
 
     @GetMapping("/daily-plans/{dailyPlanId}")
     public ResponseEntity<ApiResponse<List<SpotResponse>>> getSpotsByDailyPlan(
-            @PathVariable Long dailyPlanId) {
+            @PathVariable Long dailyPlanId,
+            Authentication authentication) {
         
-        List<SpotResponse> responses = spotService.getSpotsByDailyPlan(dailyPlanId);
+        Long userId = authentication != null ? getCurrentUserId(authentication) : null;
+        List<SpotResponse> responses = spotService.getSpotsByDailyPlan(dailyPlanId, userId);
         
         return ResponseEntity.ok(ApiResponse.success(responses));
     }
@@ -92,8 +97,12 @@ public class SpotController {
     }
 
     @DeleteMapping("/{spotId}")
-    public ResponseEntity<ApiResponse<Void>> deleteSpot(@PathVariable Long spotId) {
-        spotService.deleteSpot(spotId);
+    public ResponseEntity<ApiResponse<Void>> deleteSpot(
+            @PathVariable Long spotId,
+            Authentication authentication) {
+        
+        Long userId = getCurrentUserId(authentication);
+        spotService.deleteSpot(spotId, userId);
         
         return ResponseEntity.ok(ApiResponse.success("관광지가 삭제되었습니다.", null));
     }

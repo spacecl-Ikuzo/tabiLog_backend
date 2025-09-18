@@ -78,7 +78,7 @@ public class InvitationRedirectController {
                         // 초대된 이메일과 현재 로그인된 이메일이 일치하는지 확인
                         if (currentUser.getEmail().equals(invitation.getInviteeEmail())) {
                             // 바로 초대 수락 처리
-                            String redirectUrl = planInvitationService.acceptInvitation(token, currentUser.getId());
+                           String redirectUrl = planInvitationService.acceptInvitation(token, currentUser.getId(), true);
                             log.info("로그인된 사용자 초대 자동 수락 완료: email={}, planId={}", 
                                     currentUser.getEmail(), invitation.getPlan().getId());
                             return "redirect:" + frontendUrl + redirectUrl;

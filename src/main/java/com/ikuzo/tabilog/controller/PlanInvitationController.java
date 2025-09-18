@@ -85,7 +85,7 @@ public class PlanInvitationController extends BaseController {
             Authentication authentication) {
         
         Long userId = getCurrentUserId(authentication);
-        String redirectUrl = planInvitationService.acceptInvitation(token, userId);
+        String redirectUrl = planInvitationService.acceptInvitation(token, userId, true);
         
         return ResponseEntity.ok(ApiResponse.success("초대를 수락했습니다.", redirectUrl));
     }

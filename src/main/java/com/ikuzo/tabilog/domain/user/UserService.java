@@ -82,7 +82,8 @@ public class UserService {
             try {
                 // 먼저 초대 정보 확인하여 이메일 일치 여부 체크
                 if (planInvitationService.isInvitationEmailMatched(request.getInvitationToken(), newUser.getEmail())) {
-                    String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId());
+                    // 회원가입 시에는 초대 레코드를 삭제하지 않음 (deleteAfterAccept=false)
+                    String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId(), false);
                     redirectUrl = planRedirectUrl;
                     System.out.println("회원가입 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
                 } else {

@@ -62,16 +62,25 @@ public class AuthController {
         String redirectUrl = null;
         if (loginRequest.getInvitationToken() != null && !loginRequest.getInvitationToken().trim().isEmpty()) {
             try {
-                // 먼저 초대 정보 확인하여 이메일 일치 여부 체크
-                if (planInvitationService.isInvitationEmailMatched(loginRequest.getInvitationToken(), userDetails.getUsername())) {
-                    String planRedirectUrl = planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId());
+                var invitation = planInvitationService.getInvitationEntityByTokenNoValidate(loginRequest.getInvitationToken());
+                System.out.println("초대 정보: token=" + loginRequest.getInvitationToken()
+                        + ", inviteeEmail=" + invitation.getInviteeEmail()
+                        + ", status=" + invitation.getStatus()
+                        + ", planId=" + invitation.getPlan().getId());
+
+                boolean matched = planInvitationService.isInvitationEmailMatched(loginRequest.getInvitationToken(), userDetails.getUsername());
+                if (matched && invitation.getStatus().name().equals("PENDING")) {
+                    String planRedirectUrl = planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId(), true);
                     redirectUrl = planRedirectUrl;
-                    System.out.println("로그인 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
+                    System.out.println("로그인 시 초대 자동 수락 성공 (PENDING -> ACCEPTED) - 플랜으로 이동: " + redirectUrl);
+                } else if (matched) {
+                    redirectUrl = "/plans/" + invitation.getPlan().getId();
+                    System.out.println("로그인 시 초대 이미 처리됨(status=" + invitation.getStatus() + ") - 플랜으로 이동: " + redirectUrl);
                 } else {
-                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일=" + userDetails.getUsername() + ", 초대토큰=" + loginRequest.getInvitationToken());
+                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일=" + userDetails.getUsername()
+                            + ", 초대이메일=" + invitation.getInviteeEmail() + ")");
                 }
             } catch (Exception e) {
-                // 초대 수락 실패 시 로그만 남기고 로그인은 계속 진행
                 System.out.println("로그인 시 초대 자동 수락 실패: " + e.getMessage());
             }
         }

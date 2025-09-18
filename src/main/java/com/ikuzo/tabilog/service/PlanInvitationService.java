@@ -91,9 +91,13 @@ public class PlanInvitationService {
 
     /**
      * 초대 수락 처리
+     *
+     * @param token 초대 토큰
+     * @param userId 수락하는 사용자 ID
+     * @param deleteAfterAccept 수락 후 초대 레코드를 삭제할지 여부
      */
     @Transactional
-    public String acceptInvitation(String token, Long userId) {
+    public String acceptInvitation(String token, Long userId, boolean deleteAfterAccept) {
         // 토큰으로 초대 조회
         PlanInvitation invitation = planInvitationRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("유효하지 않은 초대 링크입니다."));
@@ -122,12 +126,18 @@ public class PlanInvitationService {
 
         planMemberRepository.save(planMember);
 
-        // 초대 상태를 수락으로 변경 후 초대 데이터 삭제
+        // 초대 상태를 수락으로 변경
         invitation.accept();
-        planInvitationRepository.delete(invitation);
 
-        log.info("플랜 초대 수락 완료 및 초대 데이터 삭제: planId={}, userId={}, email={}", 
-                invitation.getPlan().getId(), userId, user.getEmail());
+        // 필요 시 초대 데이터 삭제 (로그인 처리 등)
+        if (deleteAfterAccept) {
+            planInvitationRepository.delete(invitation);
+            log.info("플랜 초대 수락 완료 및 초대 데이터 삭제: planId={}, userId={}, email={}",
+                    invitation.getPlan().getId(), userId, user.getEmail());
+        } else {
+            log.info("플랜 초대 수락 완료 (레코드 유지): planId={}, userId={}, email={}",
+                    invitation.getPlan().getId(), userId, user.getEmail());
+        }
 
         return "/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL
     }
@@ -139,12 +149,24 @@ public class PlanInvitationService {
         try {
             PlanInvitation invitation = planInvitationRepository.findByToken(token)
                     .orElseThrow(() -> new RuntimeException("유효하지 않은 초대 링크입니다."));
-            
-            return invitation.getInviteeEmail().equals(userEmail);
+            boolean matched = invitation.getInviteeEmail() != null && userEmail != null
+                    ? invitation.getInviteeEmail().trim().equalsIgnoreCase(userEmail.trim())
+                    : false;
+            log.info("이메일 매칭 검사: token={}, inviteeEmail={}, loginEmail={}, matched={}",
+                    token, invitation.getInviteeEmail(), userEmail, matched);
+            return matched;
         } catch (Exception e) {
             log.error("초대 이메일 일치 확인 실패: token={}, userEmail={}, error={}", token, userEmail, e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * 토큰으로 초대 엔티티 조회 (검증 없이)
+     */
+    public PlanInvitation getInvitationEntityByTokenNoValidate(String token) {
+        return planInvitationRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("유효하지 않은 초대 링크입니다."));
     }
 
     /**

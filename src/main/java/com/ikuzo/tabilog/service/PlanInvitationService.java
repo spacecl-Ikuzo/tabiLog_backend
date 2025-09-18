@@ -122,10 +122,11 @@ public class PlanInvitationService {
 
         planMemberRepository.save(planMember);
 
-        // 초대 상태를 수락으로 변경
+        // 초대 상태를 수락으로 변경 후 초대 데이터 삭제
         invitation.accept();
+        planInvitationRepository.delete(invitation);
 
-        log.info("플랜 초대 수락 완료: planId={}, userId={}, email={}", 
+        log.info("플랜 초대 수락 완료 및 초대 데이터 삭제: planId={}, userId={}, email={}", 
                 invitation.getPlan().getId(), userId, user.getEmail());
 
         return "/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL

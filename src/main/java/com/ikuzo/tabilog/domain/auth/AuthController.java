@@ -68,7 +68,7 @@ public class AuthController {
                     redirectUrl = planRedirectUrl;
                     System.out.println("로그인 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
                 } else {
-                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일={}, 초대토큰={}", userDetails.getUsername(), loginRequest.getInvitationToken());
+                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일=" + userDetails.getUsername() + ", 초대토큰=" + loginRequest.getInvitationToken());
                 }
             } catch (Exception e) {
                 // 초대 수락 실패 시 로그만 남기고 로그인은 계속 진행

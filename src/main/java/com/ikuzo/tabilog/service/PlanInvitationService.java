@@ -131,6 +131,20 @@ public class PlanInvitationService {
         return "/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL
     }
 
+    /**
+     * 초대 토큰의 이메일과 사용자 이메일이 일치하는지 확인
+     */
+    public boolean isInvitationEmailMatched(String token, String userEmail) {
+        try {
+            PlanInvitation invitation = planInvitationRepository.findByToken(token)
+                    .orElseThrow(() -> new RuntimeException("유효하지 않은 초대 링크입니다."));
+            
+            return invitation.getInviteeEmail().equals(userEmail);
+        } catch (Exception e) {
+            log.error("초대 이메일 일치 확인 실패: token={}, userEmail={}, error={}", token, userEmail, e.getMessage());
+            return false;
+        }
+    }
 
     /**
      * 토큰으로 초대 정보 조회 (이메일 확인용)

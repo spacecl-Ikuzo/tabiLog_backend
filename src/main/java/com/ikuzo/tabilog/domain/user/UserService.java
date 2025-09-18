@@ -77,15 +77,19 @@ public class UserService {
         User newUser = register(request);
         String redirectUrl = null;
 
-        // 초대 토큰이 있는 경우 자동으로 초대 수락 처리
+        // 초대 토큰이 있는 경우 이메일 일치 확인 후 자동 초대 수락 처리
         if (request.getInvitationToken() != null && !request.getInvitationToken().trim().isEmpty()) {
             try {
-                String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId());
-                redirectUrl = planRedirectUrl;
-                System.out.println("회원가입 시 초대 자동 수락 성공 - 플랜으로 이동: " + redirectUrl);
+                // 먼저 초대 정보 확인하여 이메일 일치 여부 체크
+                if (planInvitationService.isInvitationEmailMatched(request.getInvitationToken(), newUser.getEmail())) {
+                    String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId());
+                    redirectUrl = planRedirectUrl;
+                    System.out.println("회원가입 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
+                } else {
+                    System.out.println("회원가입 시 초대 수락 건너뜀 - 이메일 불일치: 가입이메일=" + newUser.getEmail() + ", 초대토큰=" + request.getInvitationToken());
+                }
             } catch (Exception e) {
                 // 초대 수락 실패 시 로그만 남기고 회원가입은 계속 진행
-                // 사용자가 수동으로 초대를 수락할 수 있도록 함
                 System.out.println("회원가입 시 초대 자동 수락 실패: " + e.getMessage());
             }
         }

@@ -66,18 +66,52 @@ public class UserService {
 
         User savedUser = userRepository.save(newUser);
 
+        return savedUser;
+    }
+
+    /**
+     * 회원가입 with 초대 처리 (초대 토큰 포함)
+     */
+    @Transactional
+    public UserRegistrationResult registerWithInvitation(UserSignupRequest request) {
+        User newUser = register(request);
+        String redirectUrl = null;
+
         // 초대 토큰이 있는 경우 자동으로 초대 수락 처리
         if (request.getInvitationToken() != null && !request.getInvitationToken().trim().isEmpty()) {
             try {
-                planInvitationService.acceptInvitation(request.getInvitationToken(), savedUser.getId());
+                String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId());
+                redirectUrl = planRedirectUrl;
+                System.out.println("회원가입 시 초대 자동 수락 성공 - 플랜으로 이동: " + redirectUrl);
             } catch (Exception e) {
                 // 초대 수락 실패 시 로그만 남기고 회원가입은 계속 진행
                 // 사용자가 수동으로 초대를 수락할 수 있도록 함
-                System.out.println("초대 자동 수락 실패: " + e.getMessage());
+                System.out.println("회원가입 시 초대 자동 수락 실패: " + e.getMessage());
             }
         }
 
-        return savedUser;
+        return new UserRegistrationResult(newUser, redirectUrl);
+    }
+
+    /**
+     * 회원가입 결과를 담는 내부 클래스
+     */
+    public static class UserRegistrationResult {
+        private final User user;
+        private final String redirectUrl;
+
+        public UserRegistrationResult(User user, String redirectUrl) {
+            this.user = user;
+            this.redirectUrl = redirectUrl;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public String getRedirectUrl() {
+            return redirectUrl;
+        }
     }
 
     /**

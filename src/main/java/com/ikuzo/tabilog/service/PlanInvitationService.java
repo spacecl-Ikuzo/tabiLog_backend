@@ -131,6 +131,7 @@ public class PlanInvitationService {
         return "/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL
     }
 
+
     /**
      * 토큰으로 초대 정보 조회 (이메일 확인용)
      */
@@ -156,16 +157,13 @@ public class PlanInvitationService {
         Optional<User> userOpt = userRepository.findByEmail(invitation.getInviteeEmail());
         boolean userExists = userOpt.isPresent();
 
-        // 초대자 정보 조회
-        User inviter = invitation.getPlan().getUser();
-
         return InvitationCheckResponse.builder()
-                .inviteeEmail(invitation.getInviteeEmail())
+                .planId(invitation.getPlan().getId())
                 .planTitle(invitation.getPlan().getTitle())
-                .inviterName(inviter.getNickname())
-                .role(invitation.getRole())
+                .role(invitation.getRole().toString())
+                .inviteeEmail(invitation.getInviteeEmail())
                 .userExists(userExists)
-                .redirectType(userExists ? "login" : "signup")
+                .redirectType(userExists ? "login" : "register")
                 .build();
     }
 
@@ -212,15 +210,24 @@ public class PlanInvitationService {
         if (user.isPresent()) {
             boolean isAlreadyMember = planMemberRepository.existsByPlanIdAndUserId(planId, user.get().getId());
             if (isAlreadyMember) {
+                log.warn("이미 플랜 멤버인 사용자 초대 시도: planId={}, email={}, userId={}", 
+                        planId, email, user.get().getId());
                 throw new RuntimeException("이미 해당 플랜의 멤버입니다.");
             }
         }
+        log.debug("멤버 검증 통과: planId={}, email={}, userExists={}", 
+                planId, email, user.isPresent());
     }
 
     private void validateNoPendingInvitation(Long planId, String email) {
         Optional<PlanInvitation> existingInvitation = planInvitationRepository.findByPlanIdAndInviteeEmail(planId, email);
-        if (existingInvitation.isPresent() && existingInvitation.get().isValid()) {
-            throw new RuntimeException("이미 초대가 전송되었습니다.");
+        if (existingInvitation.isPresent()) {
+            PlanInvitation invitation = existingInvitation.get();
+            
+            // 기존 초대가 있는 경우 상태와 관계없이 삭제하고 새로 초대
+            log.info("기존 초대 삭제 후 재전송: planId={}, email={}, oldStatus={}, isValid={}", 
+                    planId, email, invitation.getStatus(), invitation.isValid());
+            planInvitationRepository.delete(invitation);
         }
     }
 

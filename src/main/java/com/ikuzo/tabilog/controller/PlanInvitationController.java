@@ -74,6 +74,7 @@ public class PlanInvitationController extends BaseController {
         
         return ResponseEntity.ok(ApiResponse.success("초대 정보를 확인했습니다.", response));
     }
+    
 
     /**
      * 초대 수락

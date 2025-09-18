@@ -58,30 +58,56 @@ public class AuthController {
         // Refresh Token 생성
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        // 초대 토큰이 있는 경우 자동으로 초대 수락 처리
+        // 초대 토큰이 있는 경우 이메일 일치 확인 후 자동 초대 수락 처리
+        String redirectUrl = null;
         if (loginRequest.getInvitationToken() != null && !loginRequest.getInvitationToken().trim().isEmpty()) {
             try {
-                planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId());
+                // 먼저 초대 정보 확인하여 이메일 일치 여부 체크
+                if (planInvitationService.isInvitationEmailMatched(loginRequest.getInvitationToken(), userDetails.getUsername())) {
+                    String planRedirectUrl = planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId());
+                    redirectUrl = planRedirectUrl;
+                    System.out.println("로그인 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
+                } else {
+                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일={}, 초대토큰={}", userDetails.getUsername(), loginRequest.getInvitationToken());
+                }
             } catch (Exception e) {
                 // 초대 수락 실패 시 로그만 남기고 로그인은 계속 진행
                 System.out.println("로그인 시 초대 자동 수락 실패: " + e.getMessage());
             }
         }
 
-        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));
+        if (redirectUrl != null) {
+            return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname(), redirectUrl));
+        } else {
+            return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken.getToken(), userDetails.getUsername(), userDetails.getUserId(), userDetails.getNickname()));
+        }
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signUpRequest) {
-        User newUser = userService.register(signUpRequest);
+        UserService.UserRegistrationResult result = userService.registerWithInvitation(signUpRequest);
+        User newUser = result.getUser();
+        String redirectUrl = result.getRedirectUrl();
         
-        SignupResponse response = new SignupResponse(
-            "회원가입이 성공적으로 완료되었습니다.",
-            newUser.getEmail(),
-            newUser.getNickname(),
-            newUser.getPrivacyAgreement(),
-            newUser.getPublicAgreement()
-        );
+        SignupResponse response;
+        if (redirectUrl != null) {
+            response = new SignupResponse(
+                "회원가입이 성공적으로 완료되었습니다.",
+                newUser.getEmail(),
+                newUser.getNickname(),
+                newUser.getPrivacyAgreement(),
+                newUser.getPublicAgreement(),
+                redirectUrl
+            );
+        } else {
+            response = new SignupResponse(
+                "회원가입이 성공적으로 완료되었습니다.",
+                newUser.getEmail(),
+                newUser.getNickname(),
+                newUser.getPrivacyAgreement(),
+                newUser.getPublicAgreement()
+            );
+        }
         
         return ResponseEntity.ok(response);
     }

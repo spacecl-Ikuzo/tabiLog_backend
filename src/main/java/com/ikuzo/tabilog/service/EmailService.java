@@ -27,7 +27,14 @@ public class EmailService {
      * 플랜 초대 이메일 전송
      */
     public void sendPlanInvitationEmail(String toEmail, String inviterName, String planTitle, String invitationToken) {
+        log.info("이메일 전송 시작 - From: {}, To: {}, Inviter: {}, Plan: {}", fromEmail, toEmail, inviterName, planTitle);
+        
         try {
+            // 이메일 주소 유효성 검사
+            if (toEmail == null || toEmail.trim().isEmpty() || !toEmail.contains("@")) {
+                throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다: " + toEmail);
+            }
+            
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -37,15 +44,44 @@ public class EmailService {
 
             // HTML 템플릿 생성
             String invitationUrl = frontendUrl + "/invitation/" + invitationToken;
+            log.debug("초대 URL 생성: {}", invitationUrl);
+            
             String htmlContent = createInvitationEmailTemplate(inviterName, planTitle, invitationUrl);
             helper.setText(htmlContent, true);
 
+            log.info("SMTP 서버로 이메일 전송 중...");
             mailSender.send(message);
-            log.info("플랜 초대 이메일 전송 완료: {} -> {}", fromEmail, toEmail);
+            log.info("✅ 플랜 초대 이메일 전송 완료: {} -> {}", fromEmail, toEmail);
 
         } catch (MessagingException e) {
-            log.error("플랜 초대 이메일 전송 실패: {}", e.getMessage());
-            throw new RuntimeException("이메일 전송에 실패했습니다.", e);
+            log.error("❌ 플랜 초대 이메일 전송 실패 (MessagingException): {}", e.getMessage(), e);
+            throw new RuntimeException("이메일 전송에 실패했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            log.error("❌ 플랜 초대 이메일 전송 실패 (Exception): {}", e.getMessage(), e);
+            throw new RuntimeException("이메일 전송 중 예상치 못한 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * 이메일 서비스 상태 확인 (테스트용)
+     */
+    public boolean testEmailConnection() {
+        try {
+            log.info("이메일 연결 테스트 시작 - SMTP 서버: smtp.gmail.com:587");
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+            helper.setFrom(fromEmail);
+            helper.setTo(fromEmail); // 자기 자신에게 테스트 이메일
+            helper.setSubject("[TabiLog] 이메일 연결 테스트");
+            helper.setText("이메일 서비스가 정상적으로 작동합니다.", false);
+            
+            mailSender.send(message);
+            log.info("✅ 이메일 연결 테스트 성공");
+            return true;
+        } catch (Exception e) {
+            log.error("❌ 이메일 연결 테스트 실패: {}", e.getMessage(), e);
+            return false;
         }
     }
 
@@ -88,9 +124,9 @@ public class EmailService {
                 "</div>" +
                 "<p>안녕하세요!</p>" +
                 "<p><strong>" + inviterName + "</strong>님이 <strong>" + planTitle + "</strong> 여행 계획에 당신을 초대했습니다.</p>" +
-                "<p>아래 버튼을 클릭하여 초대를 확인하고 여행 계획에 참여해보세요!</p>" +
+                "<p>아래 버튼을 클릭하여 초대를 수락하고 여행 계획에 참여해보세요!</p>" +
                 "<div class=\"btn-container\">" +
-                "<a href=\"" + invitationUrl + "\" class=\"btn\">초대 확인하기</a>" +
+                "<a href=\"" + invitationUrl + "\" class=\"btn\">초대 수락하기</a>" +
                 "</div>" +
                 "<div class=\"note\">" +
                 "<strong>📝 안내사항:</strong><br>" +

@@ -102,6 +102,20 @@ CREATE TABLE IF NOT EXISTS travel_segment (
     FOREIGN KEY (daily_plan_id) REFERENCES daily_plan(id) ON DELETE CASCADE
 );
 
+-- 플랜 초대 테이블
+CREATE TABLE IF NOT EXISTS plan_invitation (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    plan_id BIGINT NOT NULL,
+    invitee_email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    role ENUM('OWNER', 'EDITOR', 'VIEWER') NOT NULL DEFAULT 'VIEWER',
+    status ENUM('PENDING', 'ACCEPTED', 'REJECTED', 'EXPIRED') NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_plan_email (plan_id, invitee_email)
+);
+
 -- 지출 테이블
 CREATE TABLE IF NOT EXISTS expenses (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -136,6 +150,11 @@ CREATE INDEX IF NOT EXISTS idx_spot_category ON spot(category);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_daily_plan_id ON travel_segment(daily_plan_id);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_from_spot ON travel_segment(from_spot_id);
 CREATE INDEX IF NOT EXISTS idx_travel_segment_to_spot ON travel_segment(to_spot_id);
+CREATE INDEX IF NOT EXISTS idx_plan_invitation_plan_id ON plan_invitation(plan_id);
+CREATE INDEX IF NOT EXISTS idx_plan_invitation_email ON plan_invitation(invitee_email);
+CREATE INDEX IF NOT EXISTS idx_plan_invitation_token ON plan_invitation(token);
+CREATE INDEX IF NOT EXISTS idx_plan_invitation_status ON plan_invitation(status);
+CREATE INDEX IF NOT EXISTS idx_plan_invitation_expires_at ON plan_invitation(expires_at);
 CREATE INDEX IF NOT EXISTS idx_expenses_plan_id ON expenses(plan_id);
 CREATE INDEX IF NOT EXISTS idx_expenses_spot_id ON expenses(spot_id);
 CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(category);

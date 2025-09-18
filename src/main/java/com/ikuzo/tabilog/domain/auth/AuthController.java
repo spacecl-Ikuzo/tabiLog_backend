@@ -17,6 +17,7 @@ import com.ikuzo.tabilog.dto.response.TokenRefreshResponse;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import com.ikuzo.tabilog.security.jwt.JwtUtils;
 import com.ikuzo.tabilog.security.services.UserDetailsImpl;
+import com.ikuzo.tabilog.service.PlanInvitationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
+    private final PlanInvitationService planInvitationService;
 
     // ★ 추가: 액세스 토큰 만료(ms)
     @Value("${tabilog.app.jwtAccessExpirationMs}")
@@ -69,15 +71,53 @@ public class AuthController {
         // 6) 만료 시각(epoch millis) 계산
         long expiresAt = System.currentTimeMillis() + jwtAccessExpirationMs;
 
-        // 7) 응답
-        return ResponseEntity.ok(new JwtResponse(
-                accessToken,
-                refreshToken.getToken(),
-                userDetails.getUsername(),  // 기존 로직대로 email(또는 username) 사용
-                userDetails.getUserId(),
-                userDetails.getNickname(),
-                expiresAt                   // ★ 추가됨
-        ));
+        // 7) 초대 토큰이 있는 경우 이메일 일치 확인 후 자동 초대 수락 처리
+        String redirectUrl = null;
+        if (loginRequest.getInvitationToken() != null && !loginRequest.getInvitationToken().trim().isEmpty()) {
+            try {
+                var invitation = planInvitationService.getInvitationEntityByTokenNoValidate(loginRequest.getInvitationToken());
+                System.out.println("초대 정보: token=" + loginRequest.getInvitationToken()
+                        + ", inviteeEmail=" + invitation.getInviteeEmail()
+                        + ", status=" + invitation.getStatus()
+                        + ", planId=" + invitation.getPlan().getId());
+
+                boolean matched = planInvitationService.isInvitationEmailMatched(loginRequest.getInvitationToken(), userDetails.getUsername());
+                if (matched && invitation.getStatus().name().equals("PENDING")) {
+                    String planRedirectUrl = planInvitationService.acceptInvitation(loginRequest.getInvitationToken(), userDetails.getId(), true);
+                    redirectUrl = planRedirectUrl;
+                    System.out.println("로그인 시 초대 자동 수락 성공 (PENDING -> ACCEPTED) - 플랜으로 이동: " + redirectUrl);
+                } else if (matched) {
+                    redirectUrl = "/plans/" + invitation.getPlan().getId();
+                    System.out.println("로그인 시 초대 이미 처리됨(status=" + invitation.getStatus() + ") - 플랜으로 이동: " + redirectUrl);
+                } else {
+                    System.out.println("로그인 시 초대 수락 건너뜀 - 이메일 불일치: 로그인이메일=" + userDetails.getUsername()
+                            + ", 초대이메일=" + invitation.getInviteeEmail() + ")");
+                }
+            } catch (Exception e) {
+                System.out.println("로그인 시 초대 자동 수락 실패: " + e.getMessage());
+            }
+        }
+
+        // 8) 응답: redirectUrl 우선, 아니면 expiresAt 포함 응답
+        if (redirectUrl != null) {
+            return ResponseEntity.ok(new JwtResponse(
+                    accessToken,
+                    refreshToken.getToken(),
+                    userDetails.getUsername(),
+                    userDetails.getUserId(),
+                    userDetails.getNickname(),
+                    redirectUrl
+            ));
+        } else {
+            return ResponseEntity.ok(new JwtResponse(
+                    accessToken,
+                    refreshToken.getToken(),
+                    userDetails.getUsername(),
+                    userDetails.getUserId(),
+                    userDetails.getNickname(),
+                    expiresAt
+            ));
+        }
     }
 
     /**
@@ -85,15 +125,30 @@ public class AuthController {
      */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest signUpRequest) {
-        User newUser = userService.register(signUpRequest);
+        // 초대 토큰 처리 포함 회원가입
+        UserService.UserRegistrationResult result = userService.registerWithInvitation(signUpRequest);
+        User newUser = result.getUser();
+        String redirectUrl = result.getRedirectUrl();
 
-        SignupResponse response = new SignupResponse(
+        SignupResponse response;
+        if (redirectUrl != null) {
+            response = new SignupResponse(
+                "회원가입이 성공적으로 완료되었습니다.",
+                newUser.getEmail(),
+                newUser.getNickname(),
+                newUser.getPrivacyAgreement(),
+                newUser.getPublicAgreement(),
+                redirectUrl
+            );
+        } else {
+            response = new SignupResponse(
                 "회원가입이 성공적으로 완료되었습니다.",
                 newUser.getEmail(),
                 newUser.getNickname(),
                 newUser.getPrivacyAgreement(),
                 newUser.getPublicAgreement()
-        );
+            );
+        }
 
         return ResponseEntity.ok(response);
     }

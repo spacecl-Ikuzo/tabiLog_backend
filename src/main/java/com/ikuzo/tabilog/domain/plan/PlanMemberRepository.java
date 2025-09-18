@@ -40,4 +40,7 @@ public interface PlanMemberRepository extends JpaRepository<PlanMember, Long> {
     // 특정 사용자가 오너인 계획들 조회
     @Query("SELECT pm FROM PlanMember pm WHERE pm.user.id = :userId AND pm.role = 'OWNER'")
     List<PlanMember> findOwnedPlansByUserId(@Param("userId") Long userId);
+
+    // 특정 플랜의 특정 멤버 ID로 조회
+    Optional<PlanMember> findByIdAndPlanId(Long id, Long planId);
 }

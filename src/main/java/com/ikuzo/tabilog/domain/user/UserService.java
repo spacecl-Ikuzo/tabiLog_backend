@@ -6,18 +6,28 @@ import com.ikuzo.tabilog.dto.request.UserPasswordChangeRequest;
 import com.ikuzo.tabilog.dto.response.MyPageResponse;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
+import com.ikuzo.tabilog.service.PlanInvitationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor 
 @Transactional(readOnly = true) // 기본적으로 모든 메소드는 읽기 전용 트랜잭션으로 설정합니다.
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PlanInvitationService planInvitationService;
+
+    public UserService(UserRepository userRepository, 
+                      PasswordEncoder passwordEncoder,
+                      @Lazy PlanInvitationService planInvitationService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.planInvitationService = planInvitationService;
+    }
 
     /**
      * 회원가입
@@ -54,7 +64,59 @@ public class UserService {
                 .publicAgreement(request.getPublicAgreement())
                 .build();
 
-        return userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+
+        return savedUser;
+    }
+
+    /**
+     * 회원가입 with 초대 처리 (초대 토큰 포함)
+     */
+    @Transactional
+    public UserRegistrationResult registerWithInvitation(UserSignupRequest request) {
+        User newUser = register(request);
+        String redirectUrl = null;
+
+        // 초대 토큰이 있는 경우 이메일 일치 확인 후 자동 초대 수락 처리
+        if (request.getInvitationToken() != null && !request.getInvitationToken().trim().isEmpty()) {
+            try {
+                // 먼저 초대 정보 확인하여 이메일 일치 여부 체크
+                if (planInvitationService.isInvitationEmailMatched(request.getInvitationToken(), newUser.getEmail())) {
+                    // 회원가입 시에는 초대 레코드를 삭제하지 않음 (deleteAfterAccept=false)
+                    String planRedirectUrl = planInvitationService.acceptInvitation(request.getInvitationToken(), newUser.getId(), false);
+                    redirectUrl = planRedirectUrl;
+                    System.out.println("회원가입 시 초대 자동 수락 성공 (이메일 일치) - 플랜으로 이동: " + redirectUrl);
+                } else {
+                    System.out.println("회원가입 시 초대 수락 건너뜀 - 이메일 불일치: 가입이메일=" + newUser.getEmail() + ", 초대토큰=" + request.getInvitationToken());
+                }
+            } catch (Exception e) {
+                // 초대 수락 실패 시 로그만 남기고 회원가입은 계속 진행
+                System.out.println("회원가입 시 초대 자동 수락 실패: " + e.getMessage());
+            }
+        }
+
+        return new UserRegistrationResult(newUser, redirectUrl);
+    }
+
+    /**
+     * 회원가입 결과를 담는 내부 클래스
+     */
+    public static class UserRegistrationResult {
+        private final User user;
+        private final String redirectUrl;
+
+        public UserRegistrationResult(User user, String redirectUrl) {
+            this.user = user;
+            this.redirectUrl = redirectUrl;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public String getRedirectUrl() {
+            return redirectUrl;
+        }
     }
 
     /**

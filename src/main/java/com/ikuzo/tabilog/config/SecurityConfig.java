@@ -52,6 +52,7 @@ public class SecurityConfig {
                 // API 경로별 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 모든 OPTIONS 요청 허용 (CORS preflight)
+                        .requestMatchers("/api/plans/invitations/**").permitAll() // 초대 링크는 공개
                         .requestMatchers("/api/auth/**").permitAll() // 인증 관련 API는 인증 없이 허용
                         .requestMatchers("/auth/**").permitAll() // auth 경로도 인증 없이 허용 (개발 단계)
                         .requestMatchers("/api/spots/google-search").permitAll() // Google Maps 검색 API는 인증 없이 허용

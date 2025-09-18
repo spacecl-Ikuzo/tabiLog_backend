@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class PlanMemberResponse {
 
     private Long id;
+    private Long planId;
     private Long userId;
     private String userIdString; // 사용자의 userId (String)
     private String userNickname;

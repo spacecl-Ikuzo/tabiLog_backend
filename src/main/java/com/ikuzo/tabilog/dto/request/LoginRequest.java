@@ -12,4 +12,7 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
+    
+    // 초대 토큰 (선택적)
+    private String invitationToken;
 }

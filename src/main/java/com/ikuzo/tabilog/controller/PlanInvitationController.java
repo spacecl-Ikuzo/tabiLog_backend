@@ -68,9 +68,28 @@ public class PlanInvitationController extends BaseController {
      */
     @GetMapping("/invitations/{token}/check")
     public ResponseEntity<ApiResponse<InvitationCheckResponse>> checkInvitation(
-            @PathVariable String token) {
+            @PathVariable String token,
+            Authentication authentication) {
         
+        // 기본 응답 (비로그인 또는 이메일 불일치 포함)
         InvitationCheckResponse response = planInvitationService.checkInvitation(token);
+
+        // 로그인 상태이면서 초대 이메일과 로그인 이메일이 일치하면 즉시 수락 처리
+        if (authentication != null && authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getPrincipal())) {
+            String loginEmail = getCurrentUserEmail(authentication);
+            try {
+                boolean matched = planInvitationService.isInvitationEmailMatched(token, loginEmail);
+                if (matched) {
+                    Long userId = getCurrentUserId(authentication);
+                    String redirectUrl = planInvitationService.acceptInvitation(token, userId, true);
+                    // 프론트가 동일 응답 스키마를 기대하므로, redirectType은 login으로 유지하고 planId 포함되어 있음
+                    // 별도 변경 없이 프론트는 redirectUrl이 오면 그 값 우선 사용
+                }
+            } catch (Exception ignored) {
+                // 수락 실패 시에는 기존 response 그대로 반환
+            }
+        }
         
         return ResponseEntity.ok(ApiResponse.success("초대 정보를 확인했습니다.", response));
     }

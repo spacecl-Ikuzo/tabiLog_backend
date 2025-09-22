@@ -190,13 +190,13 @@ public class UserService {
     }
 
     /**
-     * 아이디 찾기 (이메일로 닉네임 조회)
+     * 아이디 찾기 (이메일로 user_id 조회)
      */
     public String findIdByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
-        
-        return user.getNickname();
+
+        return user.getUserId();
     }
 
     /**

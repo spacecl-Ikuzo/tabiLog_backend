@@ -173,12 +173,12 @@ public class AuthController {
     }
 
     /**
-     * 아이디 찾기 (이메일로 닉네임 조회)
+     * 아이디 찾기 (이메일로 user_id 조회)
      */
     @PostMapping("/find-id")
     public ResponseEntity<?> findId(@Valid @RequestBody FindIdRequest request) {
-        String nickname = userService.findIdByEmail(request.getEmail());
-        return ResponseEntity.ok(new FindIdResponse(nickname));
+        String userId = userService.findIdByEmail(request.getEmail());
+        return ResponseEntity.ok(new FindIdResponse(userId));
     }
 
     /**

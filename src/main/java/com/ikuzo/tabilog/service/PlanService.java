@@ -99,6 +99,9 @@ public class PlanService {
             }
         }
 
+        // DailyPlan들을 데이터베이스에 저장 (ID 생성을 위해)
+        planRepository.save(savedPlan);
+
         return convertToResponse(savedPlan);
     }
 

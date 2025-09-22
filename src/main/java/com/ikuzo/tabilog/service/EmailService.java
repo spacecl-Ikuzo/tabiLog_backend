@@ -1,7 +1,7 @@
 package com.ikuzo.tabilog.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.security.SecureRandom;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -84,6 +86,83 @@ public class EmailService {
             return false;
         }
     }
+    
+    /**
+     * 이메일 인증코드 전송 후 생성된 코드를 반환
+     */
+    public String sendVerificationCode(String toEmail) {
+        log.info("이메일 인증코드 전송 시작 - To: {}", toEmail);
+        try {
+            if (toEmail == null || toEmail.trim().isEmpty() || !toEmail.contains("@")) {
+                throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다: " + toEmail);
+            }
+
+            String code = generateSixDigitCode();
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(toEmail);
+            helper.setSubject("[TabiLog] 이메일 인증코드");
+
+            String html = createVerificationEmailTemplate(code);
+            helper.setText(html, true);
+
+            mailSender.send(message);
+            log.info("✅ 인증코드 이메일 전송 완료: {} -> {}", fromEmail, toEmail);
+            return code;
+        } catch (MessagingException e) {
+            log.error("❌ 인증코드 이메일 전송 실패 (MessagingException): {}", e.getMessage(), e);
+            throw new RuntimeException("인증코드 이메일 전송에 실패했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            log.error("❌ 인증코드 이메일 전송 실패 (Exception): {}", e.getMessage(), e);
+            throw new RuntimeException("이메일 전송 중 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+    }
+
+    private String generateSixDigitCode() {
+        SecureRandom random = new SecureRandom();
+        int value = random.nextInt(1_000_000);
+        return String.format("%06d", value);
+    }
+
+    private String createVerificationEmailTemplate(String code) {
+        return "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "<meta charset=\"UTF-8\">" +
+                "<title>TabiLog 이메일 인증</title>" +
+                "<style>" +
+                "body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }" +
+                ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
+                ".header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }" +
+                ".content { padding: 30px; }" +
+                ".title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }" +
+                ".subtitle { font-size: 16px; opacity: 0.9; }" +
+                ".code { font-size: 32px; font-weight: bold; letter-spacing: 6px; background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; text-align: center; }" +
+                ".note { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; color: #856404; }" +
+                ".footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class=\"container\">" +
+                "<div class=\"header\">" +
+                "<div class=\"title\">🧳 TabiLog 이메일 인증</div>" +
+                "<div class=\"subtitle\">아래 인증코드를 입력해주세요</div>" +
+                "</div>" +
+                "<div class=\"content\">" +
+                "<p>안녕하세요! 아래 6자리 인증코드를 입력하여 이메일 인증을 완료해주세요.</p>" +
+                "<div class=\"code\">" + code + "</div>" +
+                "<div class=\"note\"><strong>유효시간:</strong> 이 코드는 10분 후 만료됩니다.</div>" +
+                "</div>" +
+                "<div class=\"footer\">" +
+                "<p>이 이메일은 TabiLog에서 자동으로 발송되었습니다.</p>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+    }
+    
 
     /**
      * 이메일 템플릿 생성 (간단한 HTML)

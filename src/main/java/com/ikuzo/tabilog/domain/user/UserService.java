@@ -149,7 +149,7 @@ public class UserService {
         }
 
         // Entity의 update 메소드를 호출하여 변경 (Dirty Checking 활용)
-        user.updateProfile(request.getNickname(), request.getPhoneNumber());
+        user.updateProfile(user.getFirstName(), user.getLastName(), request.getNickname(), request.getPhoneNumber());
 
         return user;
         // @Transactional 어노테이션 덕분에 user 객체가 변경되면,

@@ -9,6 +9,7 @@ import com.ikuzo.tabilog.domain.plan.PlanMemberRole;
 import com.ikuzo.tabilog.domain.plan.PlanRepository;
 import com.ikuzo.tabilog.domain.user.User;
 import com.ikuzo.tabilog.domain.user.UserRepository;
+import com.ikuzo.tabilog.domain.invitation.PlanInvitationRepository;
 import com.ikuzo.tabilog.dto.request.DailyPlanRequest;
 import com.ikuzo.tabilog.dto.request.PlanRequest;
 import com.ikuzo.tabilog.dto.response.DailyPlanResponse;
@@ -42,6 +43,7 @@ public class PlanService {
     private final SpotService spotService;
     private final TravelSegmentService travelSegmentService;
     private final ExpenseService expenseService;
+    private final PlanInvitationRepository planInvitationRepository;
 
     @Transactional
     public PlanResponse createPlan(PlanRequest request, Long userId) {
@@ -155,6 +157,23 @@ public class PlanService {
     public void deletePlan(Long planId, Long userId) {
         Plan plan = planRepository.findByIdAndUserId(planId, userId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
+        
+        // 연관 엔티티들을 먼저 삭제
+        if (!plan.getDailyPlans().isEmpty()) {
+            dailyPlanRepository.deleteAll(plan.getDailyPlans());
+        }
+        
+        if (!plan.getPlanMembers().isEmpty()) {
+            planMemberRepository.deleteAll(plan.getPlanMembers());
+        }
+        
+        // PlanInvitation 삭제 (외래키 제약 조건 때문에 필요)
+        List<com.ikuzo.tabilog.domain.invitation.PlanInvitation> invitations = planInvitationRepository.findByPlanIdOrderByCreatedAtDesc(planId);
+        if (!invitations.isEmpty()) {
+            planInvitationRepository.deleteAll(invitations);
+        }
+        
+        // Expenses는 Plan 삭제 시 CASCADE로 자동 삭제됨
         planRepository.delete(plan);
     }
 

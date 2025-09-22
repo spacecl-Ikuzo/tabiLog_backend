@@ -97,15 +97,51 @@ public class PlanService {
                 savedPlan.addDailyPlan(dailyPlan);
                 currentDate = currentDate.plusDays(1);
             }
+            
         }
-
+        
+        // DailyPlan들을 데이터베이스에 저장 (ID 생성을 위해)
+        planRepository.save(savedPlan);
         return convertToResponse(savedPlan);
     }
 
     public PlanResponse getPlan(Long planId, Long userId) {
-        Plan plan = planRepository.findByIdAndUserId(planId, userId)
+        Plan plan = planRepository.findByIdAndMemberUserIdWithDailyPlans(planId, userId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
-        
+
+        // DailyPlan이 없는 경우 자동으로 생성
+        if (plan.getDailyPlans().isEmpty()) {
+            LocalDate currentDate = plan.getStartDate();
+            LocalDate endDate = plan.getEndDate();
+
+            while (!currentDate.isAfter(endDate)) {
+                DailyPlan dailyPlan = DailyPlan.builder()
+                        .plan(plan)
+                        .visitDate(currentDate)
+                        .departureTime(LocalTime.of(9, 0))
+                        .build();
+                dailyPlan = dailyPlanRepository.save(dailyPlan);
+                plan.addDailyPlan(dailyPlan);
+                currentDate = currentDate.plusDays(1);
+            }
+        }
+
+        // DailyPlan의 spots와 travelSegments를 별도로 로드
+        List<DailyPlan> dailyPlansWithSpots = dailyPlanRepository.findAllByPlanIdWithSpots(planId);
+        List<DailyPlan> dailyPlansWithTravelSegments = dailyPlanRepository.findAllByPlanIdWithTravelSegments(planId);
+
+        // Plan의 dailyPlans를 업데이트
+        plan.getDailyPlans().clear();
+        plan.getDailyPlans().addAll(dailyPlansWithSpots);
+
+        // travelSegments를 각 DailyPlan에 설정
+        for (DailyPlan dailyPlan : plan.getDailyPlans()) {
+            dailyPlansWithTravelSegments.stream()
+                    .filter(dp -> dp.getId().equals(dailyPlan.getId()))
+                    .findFirst()
+                    .ifPresent(dp -> dailyPlan.getTravelSegments().addAll(dp.getTravelSegments()));
+        }
+
         return convertToResponse(plan);
     }
 
@@ -283,7 +319,10 @@ public class PlanService {
 
         // Expense 데이터 가져오기
         List<ExpenseResponse> expenseResponses = expenseService.getExpensesByPlan(plan.getId());
-        Long totalExpenseAmount = plan.getTotalExpenseAmount();
+        
+        // 총 지출 금액 계산 (ExpenseService를 통해 정확한 계산)
+        Integer expenseTotal = expenseService.getTotalAmountByPlan(plan.getId());
+        Long totalExpenseAmount = expenseTotal != null ? expenseTotal.longValue() : 0L;
 
         return PlanResponse.builder()
                 .id(plan.getId())

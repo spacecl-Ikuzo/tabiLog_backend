@@ -134,6 +134,23 @@ public class Plan {
                 .anyMatch(member -> member.getUser().getId().equals(user.getId()));
     }
 
+    // 총 지출 금액 계산 메서드
+    public Long getTotalExpenseAmount() {
+        // Expense 테이블에서 실제 지출 금액 합계
+        Long expenseTotal = this.expenses.stream()
+                .mapToLong(expense -> expense.getAmount().longValue())
+                .sum();
+        
+        // Spot cost 합계 (예상 비용)
+        Long spotCostTotal = this.dailyPlans.stream()
+                .flatMap(dailyPlan -> dailyPlan.getSpots().stream())
+                .mapToLong(spot -> spot.getCost())
+                .sum();
+        
+        // 실제 지출이 있으면 실제 지출을, 없으면 Spot cost를 반환
+        return expenseTotal > 0 ? expenseTotal : spotCostTotal;
+    }
+
     public PlanMemberRole getMemberRole(User user) {
         return this.planMembers.stream()
                 .filter(member -> member.getUser().getId().equals(user.getId()))
@@ -164,10 +181,4 @@ public class Plan {
         this.expenses.remove(expense);
     }
 
-    // 총 지출 금액 계산
-    public Long getTotalExpenseAmount() {
-        return this.expenses.stream()
-                .mapToLong(expense -> expense.getAmount().longValue())
-                .sum();
-    }
 }

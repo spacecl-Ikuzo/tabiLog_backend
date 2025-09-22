@@ -5,6 +5,9 @@ import com.ikuzo.tabilog.domain.plan.DailyPlanRepository;
 import com.ikuzo.tabilog.domain.spot.Spot;
 import com.ikuzo.tabilog.domain.spot.SpotRepository;
 import com.ikuzo.tabilog.domain.spot.TravelSegmentRepository;
+import com.ikuzo.tabilog.domain.expense.Expense;
+import com.ikuzo.tabilog.domain.expense.ExpenseCategory;
+import com.ikuzo.tabilog.domain.expense.ExpenseRepository;
 import com.ikuzo.tabilog.dto.request.SpotRequest;
 import com.ikuzo.tabilog.dto.response.SpotResponse;
 import com.ikuzo.tabilog.exception.DailyPlanNotFoundException;
@@ -24,6 +27,7 @@ public class SpotService {
     private final SpotRepository spotRepository;
     private final DailyPlanRepository dailyPlanRepository;
     private final TravelSegmentRepository travelSegmentRepository;
+    private final ExpenseRepository expenseRepository;
 
     @Transactional
     public SpotResponse addSpotToDailyPlan(Long dailyPlanId, SpotRequest request, Long userId) {
@@ -52,6 +56,19 @@ public class SpotService {
 
         Spot savedSpot = spotRepository.save(spot);
         dailyPlan.addSpot(savedSpot);
+
+        // Spot cost가 0보다 크면 자동으로 Expense 생성
+        if (request.getCost() > 0) {
+            Expense expense = Expense.builder()
+                    .plan(dailyPlan.getPlan())
+                    .spot(savedSpot)
+                    .item(savedSpot.getName() + " 입장료")
+                    .amount(request.getCost().intValue())
+                    .category(ExpenseCategory.SIGHTSEEING)
+                    .expenseDate(dailyPlan.getVisitDate())
+                    .build();
+            expenseRepository.save(expense);
+        }
 
         return convertToResponse(savedSpot);
     }

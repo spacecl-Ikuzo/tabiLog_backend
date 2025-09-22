@@ -17,6 +17,14 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     // 사용자의 특정 여행 계획 조회
     Optional<Plan> findByIdAndUserId(Long id, Long userId);
     
+    // 사용자의 특정 여행 계획 조회 (DailyPlan 포함)
+    @Query("SELECT p FROM Plan p LEFT JOIN FETCH p.dailyPlans dp WHERE p.id = :id AND p.user.id = :userId")
+    Optional<Plan> findByIdAndUserIdWithDailyPlans(@Param("id") Long id, @Param("userId") Long userId);
+    
+    // 사용자가 작성하거나 멤버로 참여한 특정 여행 계획 조회 (DailyPlan 포함)
+    @Query("SELECT DISTINCT p FROM Plan p LEFT JOIN FETCH p.dailyPlans dp LEFT JOIN p.planMembers pm WHERE p.id = :id AND (p.user.id = :userId OR pm.user.id = :userId)")
+    Optional<Plan> findByIdAndMemberUserIdWithDailyPlans(@Param("id") Long id, @Param("userId") Long userId);
+    
     // 사용자의 활성 여행 계획 조회 (현재 날짜 기준)
     @Query("SELECT p FROM Plan p WHERE p.user.id = :userId AND p.startDate <= CURRENT_DATE AND p.endDate >= CURRENT_DATE ORDER BY p.startDate ASC")
     List<Plan> findActivePlansByUserId(@Param("userId") Long userId);

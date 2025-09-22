@@ -38,8 +38,13 @@ public class ExpenseService {
         
         Spot spot = null;
         if (request.getSpotId() != null) {
-            spot = spotRepository.findById(request.getSpotId())
-                    .orElseThrow(() -> new SpotNotFoundException("스팟을 찾을 수 없습니다: " + request.getSpotId()));
+            // spot ID가 0이거나 음수인 경우 null로 처리
+            if (request.getSpotId() <= 0) {
+                spot = null;
+            } else {
+                spot = spotRepository.findById(request.getSpotId())
+                        .orElse(null); // 존재하지 않으면 null로 처리
+            }
         }
         
         Expense expense = Expense.builder()

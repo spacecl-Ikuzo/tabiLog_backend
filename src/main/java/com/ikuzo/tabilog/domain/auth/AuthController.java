@@ -9,11 +9,14 @@ import com.ikuzo.tabilog.dto.request.FindPasswordRequest;
 import com.ikuzo.tabilog.dto.request.LoginRequest;
 import com.ikuzo.tabilog.dto.request.TokenRefreshRequest;
 import com.ikuzo.tabilog.dto.request.UserSignupRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetConfirmRequest;
 import com.ikuzo.tabilog.dto.response.FindIdResponse;
 import com.ikuzo.tabilog.dto.response.FindPasswordResponse;
 import com.ikuzo.tabilog.dto.response.JwtResponse;
 import com.ikuzo.tabilog.dto.response.SignupResponse;
 import com.ikuzo.tabilog.dto.response.TokenRefreshResponse;
+import com.ikuzo.tabilog.dto.response.PasswordResetResponse;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import com.ikuzo.tabilog.security.jwt.JwtUtils;
 import com.ikuzo.tabilog.security.services.UserDetailsImpl;
@@ -188,5 +191,23 @@ public class AuthController {
     public ResponseEntity<?> findPassword(@Valid @RequestBody FindPasswordRequest request) {
         userService.findPasswordByNicknameAndEmail(request.getNickname(), request.getEmail());
         return ResponseEntity.ok(new FindPasswordResponse());
+    }
+
+    /**
+     * 비밀번호 재설정 요청 (이메일로 인증코드 전송)
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        userService.requestPasswordReset(request.getEmail());
+        return ResponseEntity.ok(new PasswordResetResponse());
+    }
+
+    /**
+     * 비밀번호 재설정 확인 (토큰으로 새 비밀번호 설정)
+     */
+    @PostMapping("/reset-password/confirm")
+    public ResponseEntity<?> confirmPasswordReset(@Valid @RequestBody PasswordResetConfirmRequest request) {
+        userService.confirmPasswordReset(request);
+        return ResponseEntity.ok(new PasswordResetResponse("비밀번호가 성공적으로 변경되었습니다."));
     }
 }

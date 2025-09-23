@@ -222,4 +222,97 @@ public class EmailService {
                 "</body>" +
                 "</html>";
     }
+
+    /**
+     * 비밀번호 재설정 이메일 전송
+     */
+    public void sendPasswordResetEmail(String toEmail, String nickname, String resetUrl) {
+        log.info("비밀번호 재설정 이메일 전송 시작 - To: {}", toEmail);
+        
+        try {
+            // 이메일 주소 유효성 검사
+            if (toEmail == null || toEmail.trim().isEmpty() || !toEmail.contains("@")) {
+                throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다: " + toEmail);
+            }
+            
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(fromEmail);
+            helper.setTo(toEmail);
+            helper.setSubject("[TabiLog] 비밀번호 재설정");
+
+            // HTML 템플릿 생성
+            String htmlContent = createPasswordResetEmailTemplate(nickname, resetUrl);
+            helper.setText(htmlContent, true);
+
+            log.info("SMTP 서버로 비밀번호 재설정 이메일 전송 중...");
+            mailSender.send(message);
+            log.info("✅ 비밀번호 재설정 이메일 전송 완료: {} -> {}", fromEmail, toEmail);
+
+        } catch (MessagingException e) {
+            log.error("❌ 비밀번호 재설정 이메일 전송 실패 (MessagingException): {}", e.getMessage(), e);
+            throw new RuntimeException("비밀번호 재설정 이메일 전송에 실패했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            log.error("❌ 비밀번호 재설정 이메일 전송 실패 (Exception): {}", e.getMessage(), e);
+            throw new RuntimeException("이메일 전송 중 예상치 못한 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 비밀번호 재설정 이메일 템플릿 생성
+     */
+    private String createPasswordResetEmailTemplate(String nickname, String resetUrl) {
+        return "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "<meta charset=\"UTF-8\">" +
+                "<title>TabiLog 비밀번호 재설정</title>" +
+                "<style>" +
+                "body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }" +
+                ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
+                ".header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }" +
+                ".content { padding: 30px; }" +
+                ".title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }" +
+                ".subtitle { font-size: 16px; opacity: 0.9; }" +
+                ".btn-container { text-align: center; margin: 30px 0; }" +
+                ".btn { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; transition: transform 0.2s; }" +
+                ".btn:hover { transform: translateY(-2px); }" +
+                ".footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }" +
+                ".note { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; color: #856404; }" +
+                ".warning { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin: 20px 0; color: #721c24; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+                "<div class=\"container\">" +
+                "<div class=\"header\">" +
+                "<div class=\"title\">🔐 TabiLog 비밀번호 재설정</div>" +
+                "<div class=\"subtitle\">새로운 비밀번호를 설정해주세요</div>" +
+                "</div>" +
+                "<div class=\"content\">" +
+                "<p>안녕하세요, <strong>" + nickname + "</strong>님!</p>" +
+                "<p>비밀번호 재설정 요청을 받았습니다. 아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.</p>" +
+                "<div class=\"btn-container\">" +
+                "<a href=\"" + resetUrl + "\" class=\"btn\">비밀번호 재설정하기</a>" +
+                "</div>" +
+                "<div class=\"note\">" +
+                "<strong>📝 안내사항:</strong><br>" +
+                "• 이 링크는 30분 후 만료됩니다<br>" +
+                "• 보안을 위해 한 번만 사용할 수 있습니다<br>" +
+                "• 본인이 요청하지 않은 경우 이 이메일을 무시해주세요" +
+                "</div>" +
+                "<div class=\"warning\">" +
+                "<strong>⚠️ 보안 경고:</strong><br>" +
+                "• 이 링크를 다른 사람과 공유하지 마세요<br>" +
+                "• 의심스러운 활동이 있다면 즉시 고객센터로 연락해주세요" +
+                "</div>" +
+                "</div>" +
+                "<div class=\"footer\">" +
+                "<p>이 이메일은 TabiLog에서 자동으로 발송되었습니다.</p>" +
+                "<p>문의사항이 있으시면 고객센터로 연락해주세요.</p>" +
+                "</div>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+    }
 }

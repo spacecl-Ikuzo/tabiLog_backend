@@ -249,10 +249,30 @@ public class UserService {
         emailService.sendPasswordResetEmail(user.getEmail(), user.getNickname(), resetUrl);
     }
 
+    // 비밀번호 재설정: 이메일 인증코드 발송 (프론트의 find-password 화면용)
+    public void sendPasswordResetCode(String email) {
+        // 재사용: VerificationCodeService가 담당하지만, 서비스 간 의존을 피하기 위해
+        // 기존 이메일 인증 코드 흐름을 프론트에서 재사용하도록 안내. 이 메서드는 자리표시용.
+        throw new UnsupportedOperationException("Use VerificationCodeController to send email verification code");
+    }
+
+    // 비밀번호 재설정: 인증코드 검증 성공 시 토큰 발급
+    public String createResetTokenAfterCodeVerified(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
+        
+        // 기존 토큰 제거
+        passwordResetTokens.entrySet().removeIf(entry -> entry.getValue().getUserId().equals(user.getId()));
+        
+        String token = UUID.randomUUID().toString();
+        passwordResetTokens.put(token, new PasswordResetToken(user.getId(), user.getEmail(), LocalDateTime.now().plusMinutes(30)));
+        return token;
+    }
+
     /**
      * 비밀번호 재설정 확인 (토큰으로 새 비밀번호 설정)
      */
-    @Transactional
+    @Transactional(readOnly = false)
     public void confirmPasswordReset(PasswordResetConfirmRequest request) {
         // 비밀번호 확인
         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
@@ -270,10 +290,11 @@ public class UserService {
             throw new IllegalArgumentException("만료된 토큰입니다.");
         }
         
-        // 사용자 조회 및 비밀번호 업데이트
+        // 사용자 조회 및 비밀번호 업데이트 (명시적 저장)
         User user = getUserById(tokenInfo.getUserId());
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
-        
+        userRepository.save(user);
+
         // 토큰 제거 (일회성 사용)
         passwordResetTokens.remove(request.getToken());
     }

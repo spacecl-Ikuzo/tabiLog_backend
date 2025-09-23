@@ -52,11 +52,8 @@ public class User {
     private String nickname;
 
     // 프로필 이미지 관련 필드
-    @Column(name = "original_profile_image_url")
-    private String originalProfileImageUrl; // 원본 이미지 URL
-
     @Column(name = "profile_image_url")
-    private String profileImageUrl; // 실제 사용할 이미지 URL
+    private String profileImageUrl; // 프로필 이미지 URL
 
     @Column(nullable = false)
     private Boolean privacyAgreement; // 개인정보동의서 (필수)
@@ -75,7 +72,7 @@ public class User {
     @Builder
     public User(String email, String userId, String password, String firstName, String lastName,
                 String gender, String phoneNumber, String nickname,
-                String originalProfileImageUrl, String profileImageUrl,
+                String profileImageUrl,
                 Boolean privacyAgreement, Boolean publicAgreement) {
         this.email = email;
         this.userId = userId;
@@ -85,7 +82,6 @@ public class User {
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
-        this.originalProfileImageUrl = originalProfileImageUrl;
         this.profileImageUrl = profileImageUrl;
         this.privacyAgreement = privacyAgreement;
         this.publicAgreement = publicAgreement;
@@ -107,8 +103,7 @@ public class User {
         this.email = email;
     }
 
-    public void updateProfileImage(String originalImageUrl, String profileImageUrl) {
-        this.originalProfileImageUrl = originalImageUrl;
+    public void updateProfileImage(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 

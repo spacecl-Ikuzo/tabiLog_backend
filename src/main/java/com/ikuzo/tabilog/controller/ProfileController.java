@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
-public class ProfileController {
+public class ProfileController extends BaseController {
 
     private final ProfileService profileService;
 
@@ -26,7 +26,7 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<ApiResponse<ProfileResponse>> getProfile(Authentication authentication) {
         try {
-            Long userId = Long.parseLong(authentication.getName());
+            Long userId = getCurrentUserId(authentication);
             ProfileResponse profile = profileService.getProfile(userId);
             
             return ResponseEntity.ok(ApiResponse.success(
@@ -49,7 +49,7 @@ public class ProfileController {
             @Valid @RequestBody ProfileUpdateRequest request,
             Authentication authentication) {
         try {
-            Long userId = Long.parseLong(authentication.getName());
+            Long userId = getCurrentUserId(authentication);
             ProfileResponse updatedProfile = profileService.updateProfile(userId, request);
             
             return ResponseEntity.ok(ApiResponse.success(
@@ -75,7 +75,7 @@ public class ProfileController {
             @Valid @RequestBody ProfileImageUpdateRequest request,
             Authentication authentication) {
         try {
-            Long userId = Long.parseLong(authentication.getName());
+            Long userId = getCurrentUserId(authentication);
             ProfileResponse updatedProfile = profileService.updateProfileImage(userId, request);
             
             return ResponseEntity.ok(ApiResponse.success(

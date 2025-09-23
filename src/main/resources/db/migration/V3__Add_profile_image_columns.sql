@@ -8,3 +8,6 @@ UPDATE user
 SET original_profile_image_url = NULL, 
     profile_image_url = NULL 
 WHERE original_profile_image_url IS NULL;
+
+
+

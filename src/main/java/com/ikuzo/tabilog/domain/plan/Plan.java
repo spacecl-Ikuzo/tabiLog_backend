@@ -92,7 +92,8 @@ public class Plan {
     }
 
     // 비즈니스 로직
-    public void updatePlan(String title, LocalDate startDate, LocalDate endDate, Long totalBudget) {
+    public void updatePlan(String title, LocalDate startDate, LocalDate endDate, Long totalBudget,
+                           String region, String prefecture, String prefectureImageUrl) {
         if (title != null) {
             this.title = title;
         }
@@ -104,6 +105,15 @@ public class Plan {
         }
         if (totalBudget != null) {
             this.totalBudget = totalBudget;
+        }
+        if (region != null) {
+            this.region = region;
+        }
+        if (prefecture != null) {
+            this.prefecture = prefecture;
+        }
+        if (prefectureImageUrl != null) {
+            this.prefectureImageUrl = prefectureImageUrl;
         }
     }
 

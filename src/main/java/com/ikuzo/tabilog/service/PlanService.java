@@ -179,8 +179,15 @@ public class PlanService {
         Plan plan = planRepository.findByIdAndUserId(planId, userId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
 
-        plan.updatePlan(request.getTitle(), request.getStartDate(), 
-                       request.getEndDate(), request.getTotalBudget());
+        plan.updatePlan(
+                request.getTitle(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getTotalBudget(),
+                request.getRegion(),
+                request.getPrefecture(),
+                request.getPrefectureImageUrl()
+        );
 
         return convertToResponse(plan);
     }

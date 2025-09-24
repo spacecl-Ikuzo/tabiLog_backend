@@ -139,7 +139,7 @@ public class PlanInvitationService {
                     invitation.getPlan().getId(), userId, user.getEmail());
         }
 
-        return "/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL
+        return "/#/plans/" + invitation.getPlan().getId(); // 리다이렉트할 플랜 페이지 URL (해시 라우터)
     }
 
     /**

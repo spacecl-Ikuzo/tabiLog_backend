@@ -34,12 +34,5 @@ public class ProfileUpdateRequest {
     @Size(max = 20, message = "電話番号は20文字以内で入力してください")
     private String phoneNumber;
     
-    @NotBlank(message = "現在のパスワードを入力してください")
-    private String currentPassword;
-    
-    @Size(min = 8, max = 100, message = "新しいパスワードは8文字以上100文字以内で入力してください")
-    private String newPassword;
-    
-    private String confirmPassword;
 }
 

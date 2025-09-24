@@ -85,7 +85,7 @@ public class WarikanService {
                         memberShare.getAmount(),
                         frontendUrl,
                         member.getUser().getNickname(),
-                        member.getUser().getProfileImageUrl()
+                        plan.getId()
                 );
                 log.info("와리깡 이메일 전송 완료: {} -> {}", sender.getNickname(), member.getUser().getEmail());
             } catch (Exception e) {

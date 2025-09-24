@@ -67,7 +67,7 @@ public class EmailService {
      */
     public void sendWarikanEmail(String toEmail, String senderName, String planTitle, 
                                 String warikanTitle, Long totalAmount, Long memberAmount, 
-                                String frontendUrl, String memberName, String memberProfileImageUrl) {
+                                String frontendUrl, String memberName, Long planId) {
         log.info("와리깡 이메일 전송 시작 - From: {}, To: {}, Sender: {}, Plan: {}", 
                 fromEmail, toEmail, senderName, planTitle);
         
@@ -85,11 +85,11 @@ public class EmailService {
             helper.setSubject("[TabiLog] " + senderName + "さんから割り勘のお知らせです");
 
             // HTML 템플릿 생성
-            String planUrl = frontendUrl + "/#/plans/" + planTitle.replaceAll("[^a-zA-Z0-9]", "");
+            String planUrl = frontendUrl + "/#/plans/" + planId;
             log.debug("플랜 URL 생성: {}", planUrl);
             
             String htmlContent = createWarikanEmailTemplate(senderName, planTitle, warikanTitle, 
-                    totalAmount, memberAmount, planUrl, memberName, memberProfileImageUrl);
+                    totalAmount, memberAmount, planUrl, memberName);
             helper.setText(htmlContent, true);
 
             log.info("SMTP 서버로 와리깡 이메일 전송 중...");
@@ -192,7 +192,7 @@ public class EmailService {
      */
     private String createWarikanEmailTemplate(String senderName, String planTitle, String warikanTitle, 
                                             Long totalAmount, Long memberAmount, String planUrl, 
-                                            String memberName, String memberProfileImageUrl) {
+                                            String memberName) {
         return "<!DOCTYPE html>" +
                 "<html>" +
                 "<head>" +
@@ -217,9 +217,7 @@ public class EmailService {
                 ".footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }" +
                 ".note { background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0; color: #856404; }" +
                 ".sender-info { color: #666; font-size: 14px; margin-bottom: 10px; }" +
-                ".member-profile { display: flex; align-items: center; background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; }" +
-                ".profile-image { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; }" +
-                ".member-info { flex: 1; }" +
+                ".member-profile { background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; }" +
                 ".member-name { font-weight: bold; color: #333; margin-bottom: 5px; }" +
                 "</style>" +
                 "</head>" +
@@ -236,11 +234,8 @@ public class EmailService {
                 "<div style=\"color: #666; margin-bottom: 15px;\">プラン: " + planTitle + "</div>" +
                 "</div>" +
                 "<div class=\"member-profile\">" +
-                "<img src=\"" + (memberProfileImageUrl != null ? memberProfileImageUrl : "https://via.placeholder.com/50x50?text=" + memberName.charAt(0)) + "\" alt=\"" + memberName + "\" class=\"profile-image\">" +
-                "<div class=\"member-info\">" +
                 "<div class=\"member-name\">👤 " + memberName + "さん</div>" +
                 "<div style=\"color: #666; font-size: 14px;\">この割り勘の対象者です</div>" +
-                "</div>" +
                 "</div>" +
                 "<div class=\"amount-section\">" +
                 "<div class=\"total-amount\">💰 トータル費用: " + String.format("%,d", totalAmount) + "円</div>" +

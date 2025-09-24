@@ -7,8 +7,7 @@ import com.ikuzo.tabilog.dto.request.PasswordResetConfirmRequest;
 import com.ikuzo.tabilog.dto.response.MyPageResponse;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
-import com.ikuzo.tabilog.service.PlanInvitationService;
-import com.ikuzo.tabilog.service.EmailService;
+import com.ikuzo.tabilog.domain.token.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PlanInvitationService planInvitationService;
     private final EmailService emailService;
+    private final RefreshTokenService refreshTokenService;
 
     // 비밀번호 재설정 토큰 저장 (메모리 기반, 실제 운영에서는 Redis 등 사용 권장)
     private final Map<String, PasswordResetToken> passwordResetTokens = new ConcurrentHashMap<>();
@@ -35,11 +35,13 @@ public class UserService {
     public UserService(UserRepository userRepository, 
                       PasswordEncoder passwordEncoder,
                       @Lazy PlanInvitationService planInvitationService,
-                      EmailService emailService) {
+                      EmailService emailService,
+                      RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.planInvitationService = planInvitationService;
         this.emailService = emailService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     /**
@@ -192,14 +194,26 @@ public class UserService {
     }
 
     /**
-     * 회원 탈퇴 (계정 삭제)
+     * 회원 탈퇴 (계정 삭제) - 관련 데이터 완전 정리
      */
-    @Transactional
+    @Transactional(readOnly = false)
     public void deleteAccount(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId);
-        }
+        // 사용자 존재 확인
+        User user = getUserById(userId);
+        
+        // 1. Refresh Token 삭제 (로그아웃 처리)
+        refreshTokenService.deleteByUserId(userId);
+        
+        // 2. 비밀번호 재설정 토큰 삭제 (메모리에서)
+        passwordResetTokens.entrySet().removeIf(entry -> entry.getValue().getUserId().equals(userId));
+        
+        // 3. 사용자 삭제 (Cascade로 관련 데이터 자동 삭제)
+        // - PlanMember (cascade = CascadeType.ALL, orphanRemoval = true)
+        // - 관련된 모든 플랜 멤버십이 자동으로 삭제됨
         userRepository.deleteById(userId);
+        
+        // 4. 로그 출력
+        System.out.println("회원탈퇴 완료 - 사용자 ID: " + userId + ", 이메일: " + user.getEmail());
     }
 
     /**

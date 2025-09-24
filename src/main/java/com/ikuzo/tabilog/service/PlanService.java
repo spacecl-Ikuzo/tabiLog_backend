@@ -363,6 +363,7 @@ public class PlanService {
                     .userIdString(plan.getUser().getUserId())
                     .userNickname(plan.getUser().getNickname())
                     .userEmail(plan.getUser().getEmail())
+                    .profileImageUrl(plan.getUser().getProfileImageUrl()) // 프로필 이미지 URL
                     .role(PlanMemberRole.OWNER)
                     .build();
             memberResponses.add(0, ownerResponse); // 첫 번째에 추가
@@ -420,6 +421,7 @@ public class PlanService {
                 .userIdString(planMember.getUser().getUserId())
                 .userNickname(planMember.getUser().getNickname())
                 .userEmail(planMember.getUser().getEmail())
+                .profileImageUrl(planMember.getUser().getProfileImageUrl()) // user 테이블의 프로필 이미지 URL
                 .role(planMember.getRole())
                 .build();
     }

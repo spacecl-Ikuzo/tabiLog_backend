@@ -18,5 +18,6 @@ public class PlanMemberResponse {
     private String userIdString; // 사용자의 userId (String)
     private String userNickname;
     private String userEmail;
+    private String profileImageUrl; // 프로필 이미지 URL
     private PlanMemberRole role;
 }

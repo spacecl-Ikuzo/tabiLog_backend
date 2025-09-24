@@ -153,6 +153,7 @@ public class PlanMemberService {
                 .userIdString(member.getUser().getUserId()) // 사용자의 userId (String)
                 .userEmail(member.getUser().getEmail())
                 .userNickname(member.getUser().getNickname())
+                .profileImageUrl(member.getUser().getProfileImageUrl()) // user 테이블의 프로필 이미지 URL
                 .role(member.getRole())
                 .build();
     }

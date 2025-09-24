@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProfileImageUpdateRequest {
     
-    @NotBlank(message = "원본 이미지 URL을 입력해주세요")
-    private String originalImageUrl;
-    
     @NotBlank(message = "프로필 이미지 URL을 입력해주세요")
     private String profileImageUrl;
 }

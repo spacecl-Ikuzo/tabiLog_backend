@@ -91,7 +91,7 @@ public class ProfileService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        user.updateProfileImage(request.getOriginalImageUrl(), request.getProfileImageUrl());
+        user.updateProfileImage(request.getProfileImageUrl());
         
         User savedUser = userRepository.save(user);
         log.info("사용자 프로필 이미지 업데이트 완료: userId={}", userId);
@@ -112,7 +112,6 @@ public class ProfileService {
                 .nickname(user.getNickname())
                 .phoneNumber(user.getPhoneNumber())
                 .gender(user.getGender())
-                .originalProfileImageUrl(user.getOriginalProfileImageUrl())
                 .profileImageUrl(user.getProfileImageUrl())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

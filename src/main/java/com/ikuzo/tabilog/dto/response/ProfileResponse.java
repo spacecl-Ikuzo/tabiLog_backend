@@ -20,7 +20,6 @@ public class ProfileResponse {
     private String nickname;
     private String phoneNumber;
     private String gender;
-    private String originalProfileImageUrl;
     private String profileImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

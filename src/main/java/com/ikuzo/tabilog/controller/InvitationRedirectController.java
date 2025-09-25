@@ -42,7 +42,7 @@ public class InvitationRedirectController {
             
             if (invitationOpt.isEmpty()) {
                 log.warn("유효하지 않은 초대 토큰: {}", token);
-                return "redirect:" + frontendUrl + "/invitation/invalid";
+                return "redirect:" + frontendUrl + "/#/invitation/invalid";
             }
 
             PlanInvitation invitation = invitationOpt.get();
@@ -56,10 +56,10 @@ public class InvitationRedirectController {
                 if (invitation.getStatus().toString().equals("ACCEPTED")) {
                     Long planId = invitation.getPlan().getId();
                     log.info("이미 수락된 초대 - 플랜으로 이동: planId={}, token={}", planId, token);
-                    return "redirect:" + frontendUrl + "/plans/" + planId;
+                    return "redirect:" + frontendUrl + "/#/plans/" + planId;
                 }
                 
-                return "redirect:" + frontendUrl + "/invitation/expired";
+                return "redirect:" + frontendUrl + "/#/invitation/expired";
             }
 
             // 현재 로그인된 사용자 확인
@@ -86,7 +86,7 @@ public class InvitationRedirectController {
                             // 다른 계정으로 로그인된 경우
                             log.warn("초대된 이메일({})과 로그인된 이메일({})이 다름", 
                                     invitation.getInviteeEmail(), currentUser.getEmail());
-                            return "redirect:" + frontendUrl + "/invitation/email-mismatch?invited=" + 
+                            return "redirect:" + frontendUrl + "/#/invitation/email-mismatch?invited=" + 
                                    invitation.getInviteeEmail() + "&current=" + currentUser.getEmail();
                         }
                     }
@@ -100,11 +100,11 @@ public class InvitationRedirectController {
             // 프론트엔드에서 API 호출로 사용자 상태 확인 후 로그인/회원가입 페이지로 리다이렉트 처리
             log.info("초대 페이지로 리다이렉트: email={}, token={}, planTitle={}", 
                     invitation.getInviteeEmail(), token, invitation.getPlan().getTitle());
-            return "redirect:" + frontendUrl + "/invitation/" + token;
+            return "redirect:" + frontendUrl + "/#/invitation/" + token;
 
         } catch (Exception e) {
             log.error("초대 처리 중 오류 발생: token={}, error={}", token, e.getMessage());
-            return "redirect:" + frontendUrl + "/invitation/error";
+            return "redirect:" + frontendUrl + "/#/invitation/error";
         }
     }
 }

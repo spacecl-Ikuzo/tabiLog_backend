@@ -45,7 +45,7 @@ public class EmailService {
             helper.setSubject("[TabiLog] " + inviterName + "님이 여행 계획에 초대했습니다");
 
             // HTML 템플릿 생성
-            String invitationUrl = frontendUrl + "/invitation/" + invitationToken;
+            String invitationUrl = frontendUrl + "/#/invitation/" + invitationToken;
             log.debug("초대 URL 생성: {}", invitationUrl);
             
             String htmlContent = createInvitationEmailTemplate(inviterName, planTitle, invitationUrl);

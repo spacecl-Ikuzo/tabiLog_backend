@@ -2,6 +2,7 @@ package com.ikuzo.tabilog.service;
 
 import com.ikuzo.tabilog.domain.plan.DailyPlan;
 import com.ikuzo.tabilog.domain.plan.DailyPlanRepository;
+import com.ikuzo.tabilog.domain.plan.PlanMemberRepository;
 import com.ikuzo.tabilog.domain.spot.Spot;
 import com.ikuzo.tabilog.domain.spot.SpotRepository;
 import com.ikuzo.tabilog.domain.spot.TravelSegmentRepository;
@@ -26,6 +27,7 @@ public class SpotService {
 
     private final SpotRepository spotRepository;
     private final DailyPlanRepository dailyPlanRepository;
+    private final PlanMemberRepository planMemberRepository;
     private final TravelSegmentRepository travelSegmentRepository;
     private final ExpenseRepository expenseRepository;
 
@@ -34,8 +36,8 @@ public class SpotService {
         DailyPlan dailyPlan = dailyPlanRepository.findById(dailyPlanId)
                 .orElseThrow(() -> new DailyPlanNotFoundException(dailyPlanId));
         
-        // DailyPlan의 소유자 확인
-        if (!dailyPlan.getPlan().getUser().getId().equals(userId)) {
+        // DailyPlan 접근 권한 확인 (소유자 또는 plan_member)
+        if (!hasAccessToDailyPlan(dailyPlan, userId)) {
             throw new RuntimeException("이 DailyPlan에 접근할 권한이 없습니다.");
         }
 
@@ -87,8 +89,8 @@ public class SpotService {
         boolean hasAccess = false;
         
         if (userId != null) {
-            // 인증된 사용자인 경우: 자신의 데이터이거나 공개된 데이터
-            hasAccess = dailyPlan.getPlan().getUser().getId().equals(userId) || dailyPlan.getPlan().isPublic();
+            // 인증된 사용자인 경우: 자신의 데이터, plan_member, 또는 공개된 데이터
+            hasAccess = hasAccessToDailyPlan(dailyPlan, userId) || dailyPlan.getPlan().isPublic();
         } else {
             // 인증되지 않은 사용자인 경우: 공개된 데이터만
             hasAccess = dailyPlan.getPlan().isPublic();
@@ -134,8 +136,8 @@ public class SpotService {
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotNotFoundException(spotId));
 
-        // Spot의 소유자 확인 (DailyPlan → Plan → User)
-        if (!spot.getDailyPlan().getPlan().getUser().getId().equals(userId)) {
+        // Spot 접근 권한 확인 (소유자 또는 plan_member)
+        if (!hasAccessToDailyPlan(spot.getDailyPlan(), userId)) {
             throw new RuntimeException("이 Spot에 접근할 권한이 없습니다.");
         }
 
@@ -158,6 +160,20 @@ public class SpotService {
     private Integer adjustVisitOrder(Long dailyPlanId, Integer requestedOrder) {
         Integer maxOrder = spotRepository.findMaxVisitOrderByDailyPlanId(dailyPlanId);
         return Math.max(requestedOrder, maxOrder + 1);
+    }
+
+    private boolean hasAccessToDailyPlan(DailyPlan dailyPlan, Long userId) {
+        if (userId == null) {
+            return false;
+        }
+        
+        // 소유자인지 확인
+        if (dailyPlan.getPlan().getUser().getId().equals(userId)) {
+            return true;
+        }
+        
+        // plan_member인지 확인
+        return planMemberRepository.existsByPlanIdAndUserId(dailyPlan.getPlan().getId(), userId);
     }
 
     private SpotResponse convertToResponse(Spot spot) {

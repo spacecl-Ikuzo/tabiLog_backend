@@ -1,5 +1,6 @@
 package com.ikuzo.tabilog.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -9,11 +10,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class CorsConfig {
 
+    @Value("${cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    private String allowedOrigins;
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 명시적으로 허용할 Origin 설정
+        // 환경별 허용 Origin 설정
+        String[] origins = allowedOrigins.split(",");
+        for (String origin : origins) {
+            configuration.addAllowedOrigin(origin.trim());
+        }
+        
+        // 개발 환경용 localhost 추가 (프로덕션에서도 안전하게 처리)
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://localhost:3001");
         configuration.addAllowedOrigin("http://localhost:5173");

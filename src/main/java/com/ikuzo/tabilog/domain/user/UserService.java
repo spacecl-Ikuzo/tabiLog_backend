@@ -3,15 +3,23 @@ package com.ikuzo.tabilog.domain.user;
 import com.ikuzo.tabilog.dto.request.UserSignupRequest;
 import com.ikuzo.tabilog.dto.request.UserProfileUpdateRequest;
 import com.ikuzo.tabilog.dto.request.UserPasswordChangeRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetConfirmRequest;
 import com.ikuzo.tabilog.dto.response.MyPageResponse;
 import com.ikuzo.tabilog.exception.DuplicateResourceException;
 import com.ikuzo.tabilog.exception.UserNotFoundException;
+import com.ikuzo.tabilog.domain.token.RefreshTokenService;
 import com.ikuzo.tabilog.service.PlanInvitationService;
+import com.ikuzo.tabilog.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Transactional(readOnly = true) // 기본적으로 모든 메소드는 읽기 전용 트랜잭션으로 설정합니다.
@@ -20,13 +28,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PlanInvitationService planInvitationService;
+    private final EmailService emailService;
+    private final RefreshTokenService refreshTokenService;
+
+    // 비밀번호 재설정 토큰 저장 (메모리 기반, 실제 운영에서는 Redis 등 사용 권장)
+    private final Map<String, PasswordResetToken> passwordResetTokens = new ConcurrentHashMap<>();
 
     public UserService(UserRepository userRepository, 
                       PasswordEncoder passwordEncoder,
-                      @Lazy PlanInvitationService planInvitationService) {
+                      @Lazy PlanInvitationService planInvitationService,
+                      EmailService emailService,
+                      RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.planInvitationService = planInvitationService;
+        this.emailService = emailService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     /**
@@ -179,24 +196,36 @@ public class UserService {
     }
 
     /**
-     * 회원 탈퇴 (계정 삭제)
+     * 회원 탈퇴 (계정 삭제) - 관련 데이터 완전 정리
      */
-    @Transactional
+    @Transactional(readOnly = false)
     public void deleteAccount(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId);
-        }
+        // 사용자 존재 확인
+        User user = getUserById(userId);
+        
+        // 1. Refresh Token 삭제 (로그아웃 처리)
+        refreshTokenService.deleteByUserId(userId);
+        
+        // 2. 비밀번호 재설정 토큰 삭제 (메모리에서)
+        passwordResetTokens.entrySet().removeIf(entry -> entry.getValue().getUserId().equals(userId));
+        
+        // 3. 사용자 삭제 (Cascade로 관련 데이터 자동 삭제)
+        // - PlanMember (cascade = CascadeType.ALL, orphanRemoval = true)
+        // - 관련된 모든 플랜 멤버십이 자동으로 삭제됨
         userRepository.deleteById(userId);
+        
+        // 4. 로그 출력
+        System.out.println("회원탈퇴 완료 - 사용자 ID: " + userId + ", 이메일: " + user.getEmail());
     }
 
     /**
-     * 아이디 찾기 (이메일로 닉네임 조회)
+     * 아이디 찾기 (이메일로 user_id 조회)
      */
     public String findIdByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
-        
-        return user.getNickname();
+
+        return user.getUserId();
     }
 
     /**
@@ -210,8 +239,80 @@ public class UserService {
             throw new UserNotFoundException("닉네임과 이메일이 일치하지 않습니다.");
         }
         
-        // TODO: 비밀번호 재설정 이메일 발송 로직 구현
-        // 현재는 사용자 확인만 수행
+        // 비밀번호 재설정 요청으로 처리
+        requestPasswordReset(email);
+    }
+
+    /**
+     * 비밀번호 재설정 요청 (이메일로 인증코드 전송)
+     */
+    @Transactional
+    public void requestPasswordReset(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
+        
+        // 기존 토큰 제거
+        passwordResetTokens.entrySet().removeIf(entry -> entry.getValue().getUserId().equals(user.getId()));
+        
+        // 새 토큰 생성
+        String token = UUID.randomUUID().toString();
+        String resetUrl = "http://localhost:5173/reset-password?token=" + token;
+        
+        // 토큰 저장 (30분 유효)
+        passwordResetTokens.put(token, new PasswordResetToken(user.getId(), user.getEmail(), LocalDateTime.now().plusMinutes(30)));
+        
+        // 이메일 전송
+        emailService.sendPasswordResetEmail(user.getEmail(), user.getNickname(), resetUrl);
+    }
+
+    // 비밀번호 재설정: 이메일 인증코드 발송 (프론트의 find-password 화면용)
+    public void sendPasswordResetCode(String email) {
+        // 재사용: VerificationCodeService가 담당하지만, 서비스 간 의존을 피하기 위해
+        // 기존 이메일 인증 코드 흐름을 프론트에서 재사용하도록 안내. 이 메서드는 자리표시용.
+        throw new UnsupportedOperationException("Use VerificationCodeController to send email verification code");
+    }
+
+    // 비밀번호 재설정: 인증코드 검증 성공 시 토큰 발급
+    public String createResetTokenAfterCodeVerified(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일로 등록된 사용자를 찾을 수 없습니다."));
+        
+        // 기존 토큰 제거
+        passwordResetTokens.entrySet().removeIf(entry -> entry.getValue().getUserId().equals(user.getId()));
+        
+        String token = UUID.randomUUID().toString();
+        passwordResetTokens.put(token, new PasswordResetToken(user.getId(), user.getEmail(), LocalDateTime.now().plusMinutes(30)));
+        return token;
+    }
+
+    /**
+     * 비밀번호 재설정 확인 (토큰으로 새 비밀번호 설정)
+     */
+    @Transactional(readOnly = false)
+    public void confirmPasswordReset(PasswordResetConfirmRequest request) {
+        // 비밀번호 확인
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+        
+        // 토큰 검증
+        PasswordResetToken tokenInfo = passwordResetTokens.get(request.getToken());
+        if (tokenInfo == null) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+        
+        if (LocalDateTime.now().isAfter(tokenInfo.getExpiresAt())) {
+            passwordResetTokens.remove(request.getToken());
+            throw new IllegalArgumentException("만료된 토큰입니다.");
+        }
+        
+        // 사용자 조회 및 비밀번호 업데이트 (명시적 저장)
+        User user = getUserById(tokenInfo.getUserId());
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // 토큰 제거 (일회성 사용)
+        passwordResetTokens.remove(request.getToken());
     }
 
     /**
@@ -234,5 +335,32 @@ public class UserService {
             user.getParticipatingPlans().size(),
             user.getOwnedPlans().size()
         );
+    }
+
+    /**
+     * 비밀번호 재설정 토큰 정보를 담는 내부 클래스
+     */
+    private static class PasswordResetToken {
+        private final Long userId;
+        private final String email;
+        private final LocalDateTime expiresAt;
+
+        public PasswordResetToken(Long userId, String email, LocalDateTime expiresAt) {
+            this.userId = userId;
+            this.email = email;
+            this.expiresAt = expiresAt;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public LocalDateTime getExpiresAt() {
+            return expiresAt;
+        }
     }
 }

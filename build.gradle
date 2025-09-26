@@ -15,14 +15,12 @@ java {
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+    compileOnly { extendsFrom annotationProcessor }
+    // H2가 런타임에 끼어드는 걸 방지 (테스트 전용으로만 사용)
+    runtimeClasspath { exclude group: 'com.h2database', module: 'h2' }
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 ext {
     set('springCloudGcpVersion', "7.1.0")
@@ -36,16 +34,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // GCS(Spring for GCP Starter) 사용
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
+
     implementation 'com.google.maps:google-maps-services:2.2.0'
+
+    // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // DB 드라이버
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // ✅ H2는 테스트 전용으로만
+    testRuntimeOnly 'com.h2database:h2'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -58,6 +69,4 @@ dependencyManagement {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+tasks.named('test') { useJUnitPlatform() }

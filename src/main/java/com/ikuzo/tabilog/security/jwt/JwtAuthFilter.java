@@ -39,8 +39,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getServletPath();
-        // 인증이 필요 없는 경로 (회원가입/로그인, H2 콘솔 등)
+        // 인증이 필요 없는 경로 (회원가입/로그인, 이메일 인증, H2 콘솔 등)
         return path.startsWith("/api/auth/")
+                || path.startsWith("/api/email/")
                 || path.startsWith("/h2-console")
                 || path.startsWith("/actuator")
                 || path.startsWith("/swagger")

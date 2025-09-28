@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -283,7 +285,7 @@ public class PlanService {
         
         // 모든 필터가 null이거나 빈 문자열인 경우 전체 조회
         if (isEmptyOrNull(region) && isEmptyOrNull(prefecture) && isEmptyOrNull(status)) {
-            plans = planRepository.findAllPublicPlans();
+            plans = planRepository.findAll();
         } else {
             // null이나 빈 문자열을 null로 변환
             String regionFilter = isEmptyOrNull(region) ? null : region;
@@ -302,45 +304,14 @@ public class PlanService {
         return value == null || value.trim().isEmpty() || value.equals("전체");
     }
 
-    // Prefecture별 기본 이미지 URL 반환
     private String getPrefectureImageUrl(String prefecture, String customImageUrl) {
         // 커스텀 이미지가 있으면 우선 사용
         if (customImageUrl != null && !customImageUrl.trim().isEmpty()) {
             return customImageUrl;
         }
         
-        // Prefecture별 기본 이미지 매핑 (실제 사용하는 현들만)
-        Map<String, String> prefectureImages = new HashMap<>();
-        
-        // 동일본 지역
-        prefectureImages.put("北海道", "/images/prefectures/hokkaido.jpg");
-        prefectureImages.put("東京都", "/images/prefectures/tokyo.jpg");
-        prefectureImages.put("神奈川県", "/images/prefectures/kanagawa.jpg");
-        prefectureImages.put("埼玉県", "/images/prefectures/saitama.jpg");
-        prefectureImages.put("千葉県", "/images/prefectures/chiba.jpg");
-        prefectureImages.put("静岡県", "/images/prefectures/shizuoka.jpg");
-        prefectureImages.put("愛知県", "/images/prefectures/aichi.jpg");
-        prefectureImages.put("長野県", "/images/prefectures/nagano.jpg");
-        
-        // 서일본 지역
-        prefectureImages.put("京都府", "/images/prefectures/kyoto.jpg");
-        prefectureImages.put("大阪府", "/images/prefectures/osaka.jpg");
-        prefectureImages.put("兵庫県", "/images/prefectures/hyogo.jpg");
-        prefectureImages.put("奈良県", "/images/prefectures/nara.jpg");
-        prefectureImages.put("広島県", "/images/prefectures/hiroshima.jpg");
-        prefectureImages.put("福岡県", "/images/prefectures/fukuoka.jpg");
-        prefectureImages.put("熊本県", "/images/prefectures/kumamoto.jpg");
-        prefectureImages.put("沖縄県", "/images/prefectures/okinawa.jpg");
-        
-        // 북일본 지역 (北海道는 동일본과 중복이므로 제외)
-        prefectureImages.put("青森県", "/images/prefectures/aomori.jpg");
-        prefectureImages.put("宮城県", "/images/prefectures/miyagi.jpg");
-        
-        // 남일본 지역 (福岡県, 熊本県은 서일본과 중복이므로 제외)
-        prefectureImages.put("長崎県", "/images/prefectures/nagasaki.jpg");
-        prefectureImages.put("鹿児島県", "/images/prefectures/kagoshima.jpg");
-        
-        return prefectureImages.getOrDefault(prefecture, "/images/prefectures/default.jpg");
+        // 유효한 커스텀 이미지가 없으면 null 반환
+        return null;
     }
 
     private PlanResponse convertToResponse(Plan plan) {

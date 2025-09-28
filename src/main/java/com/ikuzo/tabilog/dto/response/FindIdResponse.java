@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class FindIdResponse {
     
-    private String nickname;
+    private String userId;
     private String message;
     
-    public FindIdResponse(String nickname) {
-        this.nickname = nickname;
+    public FindIdResponse(String userId) {
+        this.userId = userId;
         this.message = "아이디를 찾았습니다.";
     }
 }

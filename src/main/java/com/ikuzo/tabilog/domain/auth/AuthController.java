@@ -9,11 +9,18 @@ import com.ikuzo.tabilog.dto.request.FindPasswordRequest;
 import com.ikuzo.tabilog.dto.request.LoginRequest;
 import com.ikuzo.tabilog.dto.request.TokenRefreshRequest;
 import com.ikuzo.tabilog.dto.request.UserSignupRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetSendCodeRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetVerifyCodeRequest;
+import com.ikuzo.tabilog.dto.request.PasswordResetConfirmRequest;
 import com.ikuzo.tabilog.dto.response.FindIdResponse;
 import com.ikuzo.tabilog.dto.response.FindPasswordResponse;
 import com.ikuzo.tabilog.dto.response.JwtResponse;
 import com.ikuzo.tabilog.dto.response.SignupResponse;
 import com.ikuzo.tabilog.dto.response.TokenRefreshResponse;
+import com.ikuzo.tabilog.dto.response.PasswordResetResponse;
+import com.ikuzo.tabilog.dto.response.PasswordResetVerifyCodeResponse;
+import com.ikuzo.tabilog.service.VerificationCodeService;
 import com.ikuzo.tabilog.exception.TokenRefreshException;
 import com.ikuzo.tabilog.security.jwt.JwtUtils;
 import com.ikuzo.tabilog.security.services.UserDetailsImpl;
@@ -41,6 +48,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
     private final PlanInvitationService planInvitationService;
+    private final VerificationCodeService verificationCodeService;
 
     // ★ 추가: 액세스 토큰 만료(ms)
     @Value("${tabilog.app.jwtAccessExpirationMs}")
@@ -173,12 +181,12 @@ public class AuthController {
     }
 
     /**
-     * 아이디 찾기 (이메일로 닉네임 조회)
+     * 아이디 찾기 (이메일로 user_id 조회)
      */
     @PostMapping("/find-id")
     public ResponseEntity<?> findId(@Valid @RequestBody FindIdRequest request) {
-        String nickname = userService.findIdByEmail(request.getEmail());
-        return ResponseEntity.ok(new FindIdResponse(nickname));
+        String userId = userService.findIdByEmail(request.getEmail());
+        return ResponseEntity.ok(new FindIdResponse(userId));
     }
 
     /**
@@ -188,5 +196,45 @@ public class AuthController {
     public ResponseEntity<?> findPassword(@Valid @RequestBody FindPasswordRequest request) {
         userService.findPasswordByNicknameAndEmail(request.getNickname(), request.getEmail());
         return ResponseEntity.ok(new FindPasswordResponse());
+    }
+
+    /**
+     * 비밀번호 재설정 요청 (이메일로 인증코드 전송)
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        userService.requestPasswordReset(request.getEmail());
+        return ResponseEntity.ok(new PasswordResetResponse());
+    }
+
+    /**
+     * 비밀번호 재설정 - 인증코드 전송 (find-password 화면용)
+     */
+    @PostMapping("/reset-password/send-code")
+    public ResponseEntity<?> sendPasswordResetCode(@Valid @RequestBody PasswordResetSendCodeRequest request) {
+        verificationCodeService.sendVerificationCode(request.getEmail());
+        return ResponseEntity.ok(new PasswordResetResponse("인증코드를 이메일로 전송했습니다."));
+    }
+
+    /**
+     * 비밀번호 재설정 - 인증코드 검증 후 토큰 발급
+     */
+    @PostMapping("/reset-password/verify-code")
+    public ResponseEntity<?> verifyPasswordResetCode(@Valid @RequestBody PasswordResetVerifyCodeRequest request) {
+        boolean ok = verificationCodeService.verifyCode(request.getEmail(), request.getCode());
+        if (!ok) {
+            return ResponseEntity.badRequest().body(new PasswordResetResponse("인증코드가 올바르지 않거나 만료되었습니다."));
+        }
+        String token = userService.createResetTokenAfterCodeVerified(request.getEmail());
+        return ResponseEntity.ok(new PasswordResetVerifyCodeResponse(token));
+    }
+
+    /**
+     * 비밀번호 재설정 확인 (토큰으로 새 비밀번호 설정)
+     */
+    @PostMapping("/reset-password/confirm")
+    public ResponseEntity<?> confirmPasswordReset(@Valid @RequestBody PasswordResetConfirmRequest request) {
+        userService.confirmPasswordReset(request);
+        return ResponseEntity.ok(new PasswordResetResponse("비밀번호가 성공적으로 변경되었습니다."));
     }
 }

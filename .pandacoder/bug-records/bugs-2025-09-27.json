@@ -1,0 +1,38 @@
+[
+  {
+    "id": "151df856-18c3-4350-b71c-cf62324236ce",
+    "project": "Tabilog",
+    "timestamp": "2025-09-27 00:10:45",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7fca19de (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "summary": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7fca19de (No operat...",
+    "stackTrace": [],
+    "rawText": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7fca19de (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.\n HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@24c1dde1 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "30e8e60d-2f7c-4e80-bae6-e259e40a718f",
+    "project": "Tabilog",
+    "timestamp": "2025-09-27 00:17:20",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@11e5f9b4 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "summary": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@11e5f9b4 (No operat...",
+    "stackTrace": [],
+    "rawText": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@11e5f9b4 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.\n HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@29c8e3ed (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "resolved": false,
+    "status": "PENDING"
+  },
+  {
+    "id": "5157b54f-2d03-484c-a17d-d346dba2c784",
+    "project": "Tabilog",
+    "timestamp": "2025-09-27 00:25:32",
+    "errorType": "DATABASE",
+    "errorMessage": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4901972 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "summary": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4901972 (No operati...",
+    "stackTrace": [],
+    "rawText": "HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@4901972 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.\n HikariPool-2 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@273afb20 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.",
+    "resolved": false,
+    "status": "PENDING"
+  }
+]

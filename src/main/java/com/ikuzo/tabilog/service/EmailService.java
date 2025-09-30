@@ -197,7 +197,7 @@ public class EmailService {
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
-                "<title>TabiLog 이메일 인증</title>" +
+                "<title>TabiLog メール認証</title>" +
                 "<style>" +
                 "body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }" +
                 ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
@@ -213,16 +213,16 @@ public class EmailService {
                 "<body>" +
                 "<div class=\"container\">" +
                 "<div class=\"header\">" +
-                "<div class=\"title\">🧳 TabiLog 이메일 인증</div>" +
-                "<div class=\"subtitle\">아래 인증코드를 입력해주세요</div>" +
+                "<div class=\"title\">🧳 TabiLog メール認証</div>" +
+                "<div class=\"subtitle\">下記の認証コードを入力してください</div>" +
                 "</div>" +
                 "<div class=\"content\">" +
-                "<p>안녕하세요! 아래 6자리 인증코드를 입력하여 이메일 인증을 완료해주세요.</p>" +
+                "<p>こんにちは！下記の6桁の認証コードを入力してメール認証を完了してください。</p>" +
                 "<div class=\"code\">" + code + "</div>" +
-                "<div class=\"note\"><strong>유효시간:</strong> 이 코드는 10분 후 만료됩니다.</div>" +
+                "<div class=\"note\"><strong>有効時間：</strong>このコードは10分後に期限切れになります。</div>" +
                 "</div>" +
                 "<div class=\"footer\">" +
-                "<p>이 이메일은 TabiLog에서 자동으로 발송되었습니다.</p>" +
+                "<p>このメールはTabiLogから自動送信されました。</p>" +
                 "</div>" +
                 "</div>" +
                 "</body>" +
@@ -238,7 +238,7 @@ public class EmailService {
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
-                "<title>TabiLog 여행 계획 초대</title>" +
+                "<title>TabiLog 旅行計画への招待</title>" +
                 "<style>" +
                 "body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }" +
                 ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
@@ -260,29 +260,29 @@ public class EmailService {
                 "<div class=\"container\">" +
                 "<div class=\"header\">" +
                 "<div class=\"title\">🧳 TabiLog</div>" +
-                "<div class=\"subtitle\">여행 계획에 초대되었습니다!</div>" +
+                "<div class=\"subtitle\">旅行計画に招待されました！</div>" +
                 "</div>" +
                 "<div class=\"content\">" +
                 "<div class=\"plan-info\">" +
                 "<div class=\"plan-title\">📋 " + planTitle + "</div>" +
-                "<div class=\"inviter\">👤 " + inviterName + "님이 초대했습니다</div>" +
+                "<div class=\"inviter\">👤 " + inviterName + "さんが招待しました</div>" +
                 "</div>" +
-                "<p>안녕하세요!</p>" +
-                "<p><strong>" + inviterName + "</strong>님이 <strong>" + planTitle + "</strong> 여행 계획에 당신을 초대했습니다.</p>" +
-                "<p>아래 버튼을 클릭하여 초대를 수락하고 여행 계획에 참여해보세요!</p>" +
+                "<p>こんにちは！</p>" +
+                "<p><strong>" + inviterName + "</strong>さんが<strong>" + planTitle + "</strong>の旅行計画にあなたを招待しました。</p>" +
+                "<p>下記のボタンをクリックして招待を承諾し、旅行計画に参加してみてください！</p>" +
                 "<div class=\"btn-container\">" +
-                "<a href=\"" + invitationUrl + "\" class=\"btn\">초대 수락하기</a>" +
+                "<a href=\"" + invitationUrl + "\" class=\"btn\">招待を承諾する</a>" +
                 "</div>" +
                 "<div class=\"note\">" +
-                "<strong>📝 안내사항:</strong><br>" +
-                "• TabiLog 계정이 없으시면 회원가입 후 자동으로 여행 계획에 참여됩니다<br>" +
-                "• 이미 계정이 있으시면 로그인 후 바로 여행 계획을 확인할 수 있습니다<br>" +
-                "• 이 초대는 7일 후 만료됩니다" +
+                "<strong>📝 ご案内：</strong><br>" +
+                "• TabiLogアカウントをお持ちでない場合は、会員登録後に自動的に旅行計画に参加できます<br>" +
+                "• すでにアカウントをお持ちの場合は、ログイン後すぐに旅行計画を確認できます<br>" +
+                "• この招待は7日後に期限切れになります" +
                 "</div>" +
                 "</div>" +
                 "<div class=\"footer\">" +
-                "<p>이 이메일은 TabiLog에서 자동으로 발송되었습니다.</p>" +
-                "<p>문의사항이 있으시면 고객센터로 연락해주세요.</p>" +
+                "<p>このメールはTabiLogから自動送信されました。</p>" +
+                "<p>ご質問がございましたら、カスタマーサービスまでお問い合わせください。</p>" +
                 "</div>" +
                 "</div>" +
                 "</body>" +
@@ -421,7 +421,7 @@ public class EmailService {
                 "<html>" +
                 "<head>" +
                 "<meta charset=\"UTF-8\">" +
-                "<title>TabiLog 비밀번호 재설정</title>" +
+                "<title>TabiLog パスワード再設定</title>" +
                 "<style>" +
                 "body { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }" +
                 ".container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }" +
@@ -440,30 +440,30 @@ public class EmailService {
                 "<body>" +
                 "<div class=\"container\">" +
                 "<div class=\"header\">" +
-                "<div class=\"title\">🔐 TabiLog 비밀번호 재설정</div>" +
-                "<div class=\"subtitle\">새로운 비밀번호를 설정해주세요</div>" +
+                "<div class=\"title\">🔐 TabiLog パスワード再設定</div>" +
+                "<div class=\"subtitle\">新しいパスワードを設定してください</div>" +
                 "</div>" +
                 "<div class=\"content\">" +
-                "<p>안녕하세요, <strong>" + nickname + "</strong>님!</p>" +
-                "<p>비밀번호 재설정 요청을 받았습니다. 아래 버튼을 클릭하여 새로운 비밀번호를 설정해주세요.</p>" +
+                "<p>こんにちは、<strong>" + nickname + "</strong>さん！</p>" +
+                "<p>パスワード再設定のリクエストを受け取りました。下記のボタンをクリックして新しいパスワードを設定してください。</p>" +
                 "<div class=\"btn-container\">" +
-                "<a href=\"" + resetUrl + "\" class=\"btn\">비밀번호 재설정하기</a>" +
+                "<a href=\"" + resetUrl + "\" class=\"btn\">パスワード再設定</a>" +
                 "</div>" +
                 "<div class=\"note\">" +
-                "<strong>📝 안내사항:</strong><br>" +
-                "• 이 링크는 30분 후 만료됩니다<br>" +
-                "• 보안을 위해 한 번만 사용할 수 있습니다<br>" +
-                "• 본인이 요청하지 않은 경우 이 이메일을 무시해주세요" +
+                "<strong>📝 ご案内：</strong><br>" +
+                "• このリンクは30分後に期限切れになります<br>" +
+                "• セキュリティのため、一度だけ使用できます<br>" +
+                "• ご自身でリクエストしていない場合は、このメールを無視してください" +
                 "</div>" +
                 "<div class=\"warning\">" +
-                "<strong>⚠️ 보안 경고:</strong><br>" +
-                "• 이 링크를 다른 사람과 공유하지 마세요<br>" +
-                "• 의심스러운 활동이 있다면 즉시 고객센터로 연락해주세요" +
+                "<strong>⚠️ セキュリティ警告：</strong><br>" +
+                "• このリンクを他の人と共有しないでください<br>" +
+                "• 疑わしい活動がある場合は、すぐにカスタマーサービスまでご連絡ください" +
                 "</div>" +
                 "</div>" +
                 "<div class=\"footer\">" +
-                "<p>이 이메일은 TabiLog에서 자동으로 발송되었습니다.</p>" +
-                "<p>문의사항이 있으시면 고객센터로 연락해주세요.</p>" +
+                "<p>このメールはTabiLogから自動送信されました。</p>" +
+                "<p>ご質問がございましたら、カスタマーサービスまでお問い合わせください。</p>" +
                 "</div>" +
                 "</div>" +
                 "</body>" +

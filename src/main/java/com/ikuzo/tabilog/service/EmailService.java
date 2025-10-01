@@ -45,7 +45,7 @@ public class EmailService {
             helper.setSubject("[TabiLog] " + inviterName + "님이 여행 계획에 초대했습니다");
 
             // HTML 템플릿 생성 (해시 라우터 형식)
-            String invitationUrl = frontendUrl + "/#/invitation/" + invitationToken;
+            String invitationUrl = frontendUrl + "#/invitation/" + invitationToken;
             log.debug("초대 URL 생성: {}", invitationUrl);
             
             String htmlContent = createInvitationEmailTemplate(inviterName, planTitle, invitationUrl);
@@ -87,7 +87,7 @@ public class EmailService {
             helper.setSubject("[TabiLog] " + senderName + "さんから割り勘のお知らせです");
 
             // HTML 템플릿 생성
-            String planUrl = frontendUrl + "/#/plans/" + planId;
+            String planUrl = frontendUrl + "#/plans/" + planId;
             log.debug("플랜 URL 생성: {}", planUrl);
             
             String htmlContent = createWarikanEmailTemplate(senderName, planTitle, warikanTitle, 

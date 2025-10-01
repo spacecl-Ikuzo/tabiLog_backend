@@ -66,6 +66,9 @@ target/
 # Application specific
 application-local.properties
 application-secret.properties
+application-dev.properties
+application-prod.properties
+application.properties
 
 # Environment variables
 .env
